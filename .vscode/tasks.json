@@ -1,0 +1,32 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Debug",
+            "detail": "compiler: mingw64",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "mkdir bin\\debug && g++ -c src/*.cpp -std=c++14 -g -Wall -m64 -I include -I F:/libraries/SDL2-w64/include && g++ *.o -o bin/debug/main -L F:/libraries/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && xcopy /E /I /Y /D dll bin\\debug && xcopy /E /I /Y /D res bin\\debug\\res && start bin/debug/main",
+            "problemMatcher": ["$gcc"],
+        },
+        {
+            "label": "Build Release",
+            "detail": "compiler: mingw64",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "mkdir bin\\release && g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I F:/libraries/SDL2-w64/include && g++ *.o -o bin/release/main -s -L F:/libraries/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && xcopy /E /I /Y /D dll bin\\release && xcopy /E /I /Y /D res bin\\release\\res && start bin/release/main",
+            "problemMatcher": ["$gcc"],
+        },
+    ]
+}
