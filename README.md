@@ -14,10 +14,10 @@ Requirement - [7zip](https://www.7-zip.org/)
     - [MinGW64](https://sourceforge.net/projects/mingw-w64/)
     - [SDL2](https://www.libsdl.org/download-2.0.php) - Choose the MinGW 32/64 bit Development library
     - [SDL2_Image](https://www.libsdl.org/projects/SDL_image/) - Choose the MinGW 32/64 bit Development library
-2) Unzip all 3 files using 7zip, you may have to unzip some of the files multiple times, into a temporary folder.
-3) Move the `mingw64` folder to a more permanent place such as `C:\mingw64` 
-4) Add the `/bin` folder to your `PATH`. So if you placed MinGW64 in `C:\mingw64` then you would add `C:\mingw64\bin` in your system environment's PATH variable.
-5) Merge the contents of the `x86_64-mingw32` folder inside both of the SDL folder you extracted and move only the merged `x86_64-mingw32` folder to a permanent location such as `C:\x86_64-mingw32` (I recommend renaming this folder to something like `C:\SDL2-w64`)
+2) Unzip all 3 files using 7zip into a temporary folder, you may have to unzip some of the files multiple times.
+3) Move the `mingw64` folder to a more permanent location such as `C:\mingw64` 
+4) Add the `/bin` folder inside this folder to your `PATH`. So if you placed MinGW64 in `C:\mingw64` then you would add `C:\mingw64\bin` to your system environment's PATH variable.
+5) Merge the contents of the `x86_64-mingw32` folders inside both of the SDL folders you extracted and move only the merged `x86_64-mingw32` folder to a permanent location such as `C:\x86_64-mingw32` (I recommend renaming this folder to something like `C:\SDL2-w64`)
 
 ### Setting up VSCode
 
