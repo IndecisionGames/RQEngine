@@ -1,12 +1,16 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <string>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 
 SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* gWall = NULL;
+
+// This file is a playground for now while I follow https://lazyfoo.net/tutorials/SDL/index.php
 
 bool init() {
 	// Initialise SDL
@@ -22,19 +26,41 @@ bool init() {
 			return false;
 		}
 		else {
-			// Get window surface
-			gScreenSurface = SDL_GetWindowSurface(gWindow);
+			// Initialise PNG loading
+			int imgFlags = IMG_INIT_PNG;
+			if (!(IMG_Init(imgFlags) == imgFlags)) {
+				printf("SDL_image could not initialise! SDL_image Error: %s\n", IMG_GetError());
+			} else {
+				// Get window surface
+				gScreenSurface = SDL_GetWindowSurface(gWindow);
+			}
 		}
 	}
 
 	return true;
 }
 
+SDL_Surface* loadSurface(std::string path) {
+	SDL_Surface* optimisedSurface = NULL;
+
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (loadedSurface == NULL) {
+		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+	} else {
+		optimisedSurface = SDL_ConvertSurface(loadedSurface, gScreenSurface->format, 0);
+		if (optimisedSurface == NULL) {
+			printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+		}
+
+		SDL_FreeSurface(loadedSurface);
+	}
+	return optimisedSurface;
+}
+
 bool loadMedia() {
 	// Load wall image
-	gWall = SDL_LoadBMP("res/wall128x128.bmp");
+	gWall = loadSurface("res/wall128x128.bmp");
 	if (gWall == NULL) {
-		printf("Unable to load image %s! SDL Error: %s\n", "res/wall128x128.bmp", SDL_GetError());
 		return false;
 	}
 	return true;
@@ -63,12 +89,65 @@ int main( int argc, char* args[] )
 	}
 	if (!loadMedia()) {
 		printf("Failed to load media!\n");
+		close();
+		return 1;
 	}
-	else {
-		SDL_BlitSurface(gWall, NULL, gScreenSurface, NULL);
+	
+	bool quit = false;
+
+	SDL_Event e;
+
+	// Game loop
+	while (!quit) {
+
+		// Handle events
+		while (SDL_PollEvent(&e) != 0) {
+
+			if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) quit = true;
+
+			if (e.type == SDL_MOUSEBUTTONDOWN) {
+				switch(e.button.button) {
+					case 1:
+						printf("Left Mouse\n");
+						break;
+					case 3:
+						printf("Right Mouse\n");
+						break;
+				}
+			}
+
+			if (e.type == SDL_KEYDOWN) {
+				switch(e.key.keysym.sym) {
+					case SDLK_w:
+						printf("W\n");
+						break;
+					case SDLK_a:
+						printf("A\n");
+						break;
+					case SDLK_s:
+						printf("S\n");
+						break;
+					case SDLK_d:
+						printf("D\n");
+						break;
+				}
+			}
+		}
+
+		// Stretched Image =====
+		SDL_Rect stretchRect;
+		stretchRect.x = 0;
+		stretchRect.y = 0;
+		stretchRect.w = SCREEN_WIDTH;
+		stretchRect.h = SCREEN_HEIGHT;
+		SDL_BlitScaled( gWall, NULL, gScreenSurface, &stretchRect );
+		// =====================
+
+		// SDL_BlitSurface(gWall, NULL, gScreenSurface, NULL);
 		SDL_UpdateWindowSurface(gWindow);
-		SDL_Delay(2000);
+
 	}
+
 
 	close();
 
