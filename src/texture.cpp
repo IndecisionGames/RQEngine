@@ -15,19 +15,19 @@ bool Texture::loadFromFile(SDL_Renderer* renderer, std::string path) {
 
     SDL_Texture* newTexture = NULL;
 
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+
     //Color key image (remove cyan background)
     SDL_SetColorKey(loadedSurface, 1, SDL_MapRGB(loadedSurface->format, 0, 255, 255));
 
-	newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+    newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 
     mWidth = loadedSurface->w;
     mHeight = loadedSurface->h;
-	SDL_FreeSurface(loadedSurface);
+    SDL_FreeSurface(loadedSurface);
 
     mTexture = newTexture;
-	return mTexture != NULL;
+    return mTexture != NULL;
 }
 
 void Texture::free() {
