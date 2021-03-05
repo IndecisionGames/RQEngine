@@ -1,5 +1,9 @@
 # RQEngine
 
+## Current output
+
+![Output](./res/result.png)
+
 ## Getting started
 
 Follow the steps below to get started.
