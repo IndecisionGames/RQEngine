@@ -2,7 +2,7 @@
 
 ## Current output
 
-![Output](./res/result.png)
+![Output](./res/result.gif)
 
 ## Getting started
 
