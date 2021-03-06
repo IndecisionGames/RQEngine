@@ -15,7 +15,7 @@ class Texture {
     public:
         Texture();
         ~Texture();
-        bool loadFromFile(SDL_Renderer* renderer, std::string path);
+        bool loadFromFile(SDL_Renderer* renderer, std::string path, SDL_Color keyColor = {0, 255, 255});
         bool loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, std::string textureText, SDL_Color textColor);
         void free();
         void render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL);

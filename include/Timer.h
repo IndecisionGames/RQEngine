@@ -13,14 +13,11 @@ class Timer {
     
     public:
         Timer();
-
         void start();
         void stop();
         void pause();
         void unpause();
-
         Uint32 getTicks();
-
         bool isPaused();
         bool isStarted();
 };

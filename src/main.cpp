@@ -7,6 +7,7 @@
 
 #include "Texture.h"
 #include "Timer.h"
+#include "Dot.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -22,6 +23,7 @@ Timer timer;
 
 TTF_Font *gFont = NULL;
 
+Texture gDotTexture;
 Texture gTimeTexture;
 Texture gWallTexture;
 Texture gSpriteSheetTexture;
@@ -47,6 +49,7 @@ void loadTextures() {
 
     gWallTexture.loadFromFile(gRenderer, "res/wall128x128.png");
     gSpriteSheetTexture.loadFromFile(gRenderer, "res/sprites_sheet.png");
+    gDotTexture.loadFromFile(gRenderer, "res/dot.bmp", {255, 255, 255});
     
     //Set top left sprite
     gSpriteClips[ 0 ].x =   0;
@@ -77,6 +80,7 @@ void close() {
     gWallTexture.free();
     gSpriteSheetTexture.free();
     gTimeTexture.free();
+    gDotTexture.free();
 
     TTF_CloseFont(gFont);
     gFont = NULL;
@@ -98,6 +102,9 @@ int main( int argc, char* args[] ) {
     
     bool quit = false;
     SDL_Event e;
+
+    Dot dot;
+    dot.setTexture(&gDotTexture);
 
     SDL_Color textColor = {0, 0, 0};
 
@@ -123,16 +130,6 @@ int main( int argc, char* args[] ) {
                     case 1:
                         printf("Left Mouse\n");
                         break;
-                    case 3:
-                        if(!timer.isStarted()) {
-                            printf("Starting timer\n");
-                            timer.start();
-                        } else {
-                            Uint32 time = timer.getTicks();
-                            printf("Time: %ums\n", time);
-                            timer.stop();
-                        }
-                        break;
                 }
             }
 
@@ -152,14 +149,18 @@ int main( int argc, char* args[] ) {
                         break;
                 }
             }
+
+            dot.handleEvent(e);
         }
+
+        dot.move(SCREEN_HEIGHT, SCREEN_WIDTH);
 
         // Calculate and cap fps
         float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
         if (avgFPS > 2000000) avgFPS = 0;
 
         timeText.str("");
-        timeText << "FPS " << avgFPS;
+        timeText << int(avgFPS);
         gTimeTexture.loadFromRenderedText(gRenderer, gFont, timeText.str().c_str(), textColor);
 
         SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
@@ -200,7 +201,9 @@ int main( int argc, char* args[] ) {
             SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH / 2, i);
         }
 
-        gTimeTexture.render(gRenderer, (SCREEN_WIDTH - gTimeTexture.getWidth()) / 2, (SCREEN_HEIGHT - gTimeTexture.getHeight()) / 2);
+        dot.render(gRenderer);
+
+        gTimeTexture.render(gRenderer, 50 - gTimeTexture.getWidth() / 2, 50 - gTimeTexture.getHeight() / 2);
 
         SDL_RenderPresent(gRenderer);
         ++countedFrames;
