@@ -104,7 +104,9 @@ int main( int argc, char* args[] ) {
     SDL_Event e;
 
     Dot dot;
+    Dot autoDot(50, 80, 10, 10);
     dot.setTexture(&gDotTexture);
+    autoDot.setTexture(&gDotTexture);
 
     SDL_Color textColor = {0, 0, 0};
 
@@ -154,6 +156,7 @@ int main( int argc, char* args[] ) {
         }
 
         dot.move(SCREEN_HEIGHT, SCREEN_WIDTH);
+        autoDot.autoMove(SCREEN_HEIGHT, SCREEN_WIDTH);
 
         // Calculate and cap fps
         float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
@@ -202,6 +205,7 @@ int main( int argc, char* args[] ) {
         }
 
         dot.render(gRenderer);
+        autoDot.render(gRenderer);
 
         gTimeTexture.render(gRenderer, 50 - gTimeTexture.getWidth() / 2, 50 - gTimeTexture.getHeight() / 2);
 

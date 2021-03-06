@@ -1,10 +1,10 @@
 #include "Dot.h"
 
-Dot::Dot() {
-    mPosX = 0;
-    mPosY = 0;
-    mVelX = 0;
-    mVelY = 0;
+Dot::Dot(int posX, int posY, int velX, int velY) {
+    mPosX = posX;
+    mPosY = posY;
+    mVelX = velX;
+    mVelY = velY;
     mTexture = NULL;
 }
 
@@ -35,6 +35,19 @@ void Dot::move(int screenHeight, int screenWidth) {
     if ((mPosX < 0) || (mPosX + DOT_WIDTH > screenWidth)) mPosX -= mVelX;
     mPosY += mVelY;
     if ((mPosY < 0) || (mPosY + DOT_HEIGHT > screenHeight)) mPosY -= mVelY;
+}
+
+void Dot::autoMove(int screenHeight, int screenWidth) {
+    mPosX += mVelX;
+    if ((mPosX < 0) || (mPosX + DOT_WIDTH > screenWidth)) {
+        mPosX -= mVelX;
+        mVelX = -mVelX;
+    }
+    mPosY += mVelY;
+    if ((mPosY < 0) || (mPosY + DOT_HEIGHT > screenHeight)) { 
+        mPosY -= mVelY;
+        mVelY = -mVelY;
+    }
 }
 
 void Dot::render(SDL_Renderer* renderer) {
