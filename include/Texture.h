@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 
@@ -15,6 +16,7 @@ class Texture {
         Texture();
         ~Texture();
         bool loadFromFile(SDL_Renderer* renderer, std::string path);
+        bool loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, std::string textureText, SDL_Color textColor);
         void free();
         void render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip = NULL);
         int getWidth();

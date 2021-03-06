@@ -1,16 +1,28 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 #include "Texture.h"
+#include "Timer.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
+
+bool vsync = false;
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
+Timer timer;
+
+TTF_Font *gFont = NULL;
+
+Texture gTimeTexture;
 Texture gWallTexture;
 Texture gSpriteSheetTexture;
 SDL_Rect gSpriteClips[4];
@@ -18,12 +30,21 @@ SDL_Rect gSpriteClips[4];
 void init() {
     SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
 
     gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+
+    if (vsync) {
+        gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    } else {
+        gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    }
+    
 }
 
 void loadTextures() {
+    gFont = TTF_OpenFont("res/font/OstrichSans-Heavy.otf", 48);
+
     gWallTexture.loadFromFile(gRenderer, "res/wall128x128.png");
     gSpriteSheetTexture.loadFromFile(gRenderer, "res/sprites_sheet.png");
     
@@ -54,12 +75,18 @@ void loadTextures() {
 
 void close() {
     gWallTexture.free();
+    gSpriteSheetTexture.free();
+    gTimeTexture.free();
+
+    TTF_CloseFont(gFont);
+    gFont = NULL;
 
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     gRenderer = NULL;
     gWindow = NULL;
 
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }
@@ -72,8 +99,19 @@ int main( int argc, char* args[] ) {
     bool quit = false;
     SDL_Event e;
 
+    SDL_Color textColor = {0, 0, 0};
+
+    Timer fpsTimer;
+    Timer capTimer;
+
+    std::stringstream timeText;
+
+    int countedFrames = 0;
+    fpsTimer.start();
+
     // Game loop
     while (!quit) {
+        capTimer.start();
 
         // Handle events
         while (SDL_PollEvent(&e) != 0) {
@@ -86,7 +124,14 @@ int main( int argc, char* args[] ) {
                         printf("Left Mouse\n");
                         break;
                     case 3:
-                        printf("Right Mouse\n");
+                        if(!timer.isStarted()) {
+                            printf("Starting timer\n");
+                            timer.start();
+                        } else {
+                            Uint32 time = timer.getTicks();
+                            printf("Time: %ums\n", time);
+                            timer.stop();
+                        }
                         break;
                 }
             }
@@ -108,6 +153,14 @@ int main( int argc, char* args[] ) {
                 }
             }
         }
+
+        // Calculate and cap fps
+        float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
+        if (avgFPS > 2000000) avgFPS = 0;
+
+        timeText.str("");
+        timeText << "FPS " << avgFPS;
+        gTimeTexture.loadFromRenderedText(gRenderer, gFont, timeText.str().c_str(), textColor);
 
         SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
         SDL_RenderClear(gRenderer);
@@ -147,7 +200,17 @@ int main( int argc, char* args[] ) {
             SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH / 2, i);
         }
 
+        gTimeTexture.render(gRenderer, (SCREEN_WIDTH - gTimeTexture.getWidth()) / 2, (SCREEN_HEIGHT - gTimeTexture.getHeight()) / 2);
+
         SDL_RenderPresent(gRenderer);
+        ++countedFrames;
+
+        if (!vsync) {
+            int frameTicks = capTimer.getTicks();
+            if (frameTicks < SCREEN_TICKS_PER_FRAME) {
+                SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTicks);
+            }
+        }
     }
 
     close();
