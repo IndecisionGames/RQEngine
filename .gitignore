@@ -1,4 +1,2 @@
-bin/debug/res/
-bin/release/res/
-*.exe
+bin/
 *.o
