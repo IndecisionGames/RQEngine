@@ -51,6 +51,14 @@ void Texture::free() {
     }
 }
 
+void Texture::setColor(SDL_Color color) {
+    SDL_SetTextureColorMod(mTexture, color.r, color.g, color.b);
+}
+
+void Texture::setAlpha(Uint8 alpha) {
+    SDL_SetTextureAlphaMod(mTexture, alpha);
+}
+
 void Texture::render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip) {
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
     if (clip != NULL) {
