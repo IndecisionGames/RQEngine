@@ -11,11 +11,11 @@ Particle::Particle(int x, int y, std::vector<Texture*> particleTextures) {
     mShimmerTexture = particleTextures[3];
 }
 
-void Particle::render(SDL_Renderer* renderer) {
-    mTexture->render(renderer, mPosX, mPosY);
+void Particle::render(SDL_Renderer* renderer, int camX, int camY) {
+    mTexture->render(renderer, mPosX - camX, mPosY - camY);
 
     if(mFrame % 5 == 0) {
-        mShimmerTexture->render(renderer, mPosX, mPosY);
+        mShimmerTexture->render(renderer, mPosX - camX, mPosY - camY);
     }
 
     mFrame++;

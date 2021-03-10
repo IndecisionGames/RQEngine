@@ -15,6 +15,6 @@ class Particle {
 
     public:
         Particle(int x, int y, std::vector<Texture*> particleTextures);
-        void render(SDL_Renderer* renderer);
+        void render(SDL_Renderer* renderer, int camX, int camY);
         bool isDead();
 };

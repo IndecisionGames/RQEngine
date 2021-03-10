@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Circle.h"
 #include "Particle.h"
+#include "Tile.h"
 
 class Dot {
     private:
@@ -17,7 +18,7 @@ class Dot {
         Circle mCollider;
         void shiftColliders();
         Particle* particles[TOTAL_PARTICLES];
-        void renderParticles(SDL_Renderer* renderer);
+        void renderParticles(SDL_Renderer* renderer, SDL_Rect& camera);
 
     public:
         static const int DOT_WIDTH = 20;
@@ -27,8 +28,9 @@ class Dot {
         ~Dot();
         void setTexture(Texture* texture);
         void handleEvent(SDL_Event& e);
-        void move(int levelHeight, int levelWidth, SDL_Rect& square);
-        void render(SDL_Renderer* renderer, int camX = 0, int camY = 0);
+        void move(int levelHeight, int levelWidth, Tile *tiles[]);
+        void render(SDL_Renderer* renderer, SDL_Rect& camera);
+        void setCamera(SDL_Rect& camera, int levelHeight, int levelWidth);
         Circle& getCollider();
         int getPosX();
         int getPosY();

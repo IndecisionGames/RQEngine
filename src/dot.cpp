@@ -13,7 +13,7 @@ bool checkCollision(Circle& a, Circle& b) {
     return false;
 }
 
-bool checkCollision(Circle& a, SDL_Rect& b) {
+bool checkCollision(Circle& a, SDL_Rect b) {
     int cX, cY;
 
     if (a.x < b.x) {
@@ -33,6 +33,15 @@ bool checkCollision(Circle& a, SDL_Rect& b) {
     }
 
     if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r) return true;
+    return false;
+}
+
+bool touchesWall(Circle& collider, Tile* tiles[]) {
+    for(int i = 0; i < TOTAL_TILES; ++i) {
+        if ((tiles[i]->getType() >= TILE_CENTER) && (tiles[i]->getType() <= TILE_TOPLEFT)) {
+            if (checkCollision(collider, tiles[i]->getBox())) return true;
+        }
+    }
     return false;
 }
 
@@ -81,27 +90,27 @@ void Dot::handleEvent(SDL_Event& e) {
     }
 }
 
-void Dot::move(int levelHeight, int leveWidth, SDL_Rect& square) {
+void Dot::move(int levelHeight, int leveWidth, Tile *tiles[]) {
     mPosX += mVelX;
     shiftColliders();
-    if ((mPosX < 0) || (mPosX + DOT_WIDTH > leveWidth) || checkCollision(mCollider, square)) {
+    if ((mPosX < 0) || (mPosX + DOT_WIDTH > leveWidth) || touchesWall(mCollider, tiles)) {
         mPosX -= mVelX;
         shiftColliders();
     }
     mPosY += mVelY;
     shiftColliders();
-    if ((mPosY < 0) || (mPosY + DOT_HEIGHT > levelHeight) || checkCollision(mCollider, square)) { 
+    if ((mPosY < 0) || (mPosY + DOT_HEIGHT > levelHeight) || touchesWall(mCollider, tiles)) { 
         mPosY -= mVelY;
         shiftColliders();
     }
 }
 
-void Dot::render(SDL_Renderer* renderer, int camX, int camY) {
-    mTexture->render(renderer, mPosX - camX, mPosY - camY);
-    renderParticles(renderer);
+void Dot::render(SDL_Renderer* renderer, SDL_Rect& camera) {
+    mTexture->render(renderer, mPosX - camera.x, mPosY - camera.y);
+    renderParticles(renderer, camera);
 }
 
-void Dot::renderParticles(SDL_Renderer* renderer) {
+void Dot::renderParticles(SDL_Renderer* renderer, SDL_Rect& camera) {
     for (int i = 0; i < TOTAL_PARTICLES; ++i) {
         if (particles[i]->isDead()) {
             delete particles[i];
@@ -110,13 +119,23 @@ void Dot::renderParticles(SDL_Renderer* renderer) {
     }
 
     for (int i = 0; i < TOTAL_PARTICLES; ++i) {
-        particles[i]->render(renderer);
+        particles[i]->render(renderer, camera.x, camera.y);
     }
 }
 
 void Dot::shiftColliders() {
     mCollider.x = mPosX + DOT_WIDTH / 2;
     mCollider.y = mPosY + DOT_HEIGHT / 2; 
+}
+
+void Dot::setCamera(SDL_Rect& camera, int levelHeight, int levelWidth) {
+    camera.x = (mPosX + DOT_WIDTH / 2) - camera.w / 2;
+    camera.y = (mPosY + DOT_HEIGHT / 2) - camera.h / 2;
+
+    if( camera.x < 0 ) camera.x = 0;
+    if( camera.y < 0 ) camera.y = 0;
+    if( camera.x > levelWidth - camera.w ) camera.x = levelWidth - camera.w;
+    if( camera.y > levelHeight - camera.h ) camera.y = levelHeight - camera.h;
 }
 
 Circle& Dot::getCollider() {
