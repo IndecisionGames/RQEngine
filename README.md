@@ -8,9 +8,7 @@
 
 Follow the steps below to get started.
 
-### Setting up SDL2 and MinGW64 
-
-_Note: this only works on a **Windows** development environment_
+### Setting up SDL2 and MinGW64 for Windows Development
 
 Requirement - [7zip](https://www.7-zip.org/)
 
@@ -24,7 +22,15 @@ Requirement - [7zip](https://www.7-zip.org/)
 4) Add the `/bin` folder inside this folder to your `PATH`. So if you placed MinGW64 in `C:\mingw64` then you would add `C:\mingw64\bin` to your system environment's PATH variable.
 5) Merge the contents of the `x86_64-mingw32` folders inside the SDL folders you extracted and move only the merged `x86_64-mingw32` folder to a permanent location such as `C:\x86_64-mingw32` (I recommend renaming this folder to something like `C:\SDL2-w64`)
 
-### Setting up VSCode
+### Setting up SDL2 in Xcode for Mac Development
+
+1) In a terminal run: `brew install sdl2 sdl2_image sdl2_ttf`
+2) Create a new Xcode command line project and add the repo's contents to the project folder within Xcode
+3) Open the target settings by clicking on the xcodeproj file
+4) General -> Add Frameworks and Libraries -> add `libSDL2-2.0.0.dylib`, `libSDL2_image-2.0.0.dylib` and `libSDL2_ttf-2.0.0.dylib`
+5) Build Settings -> Search Paths -> Header Search Paths -> add `/usr/local/include`
+
+### Setting up VSCode for Windows
 
 1) Download and install VSCode from [here](https://code.visualstudio.com/)
 2) Open VSCode and install the **C/C++ extension** by **Microsoft**
