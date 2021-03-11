@@ -45,7 +45,7 @@ bool touchesWall(Circle& collider, Tile* tiles[]) {
     return false;
 }
 
-Dot::Dot(std::vector<Texture*> particleTextures, int posX, int posY, int velX, int velY) {
+Dot::Dot(std::vector<Texture*> particleTextures, float posX, float posY, float velX, float velY) {
     mPosX = posX;
     mPosY = posY;
     mVelX = velX;
@@ -58,7 +58,7 @@ Dot::Dot(std::vector<Texture*> particleTextures, int posX, int posY, int velX, i
     shiftColliders();
 
     for (int i = 0; i < TOTAL_PARTICLES; ++i) {
-        particles[i] = new Particle(mPosX, mPosY, mParticleTextures);
+        particles[i] = new Particle((int)mPosX, (int)mPosY, mParticleTextures);
     }
 }
 
@@ -90,23 +90,23 @@ void Dot::handleEvent(SDL_Event& e) {
     }
 }
 
-void Dot::move(int levelHeight, int leveWidth, Tile *tiles[]) {
-    mPosX += mVelX;
+void Dot::move(float deltaTime, int levelHeight, int leveWidth, Tile *tiles[]) {
+    mPosX += mVelX * deltaTime;
     shiftColliders();
     if ((mPosX < 0) || (mPosX + DOT_WIDTH > leveWidth) || touchesWall(mCollider, tiles)) {
-        mPosX -= mVelX;
+        mPosX -= mVelX * deltaTime;
         shiftColliders();
     }
-    mPosY += mVelY;
+    mPosY += mVelY * deltaTime;
     shiftColliders();
     if ((mPosY < 0) || (mPosY + DOT_HEIGHT > levelHeight) || touchesWall(mCollider, tiles)) { 
-        mPosY -= mVelY;
+        mPosY -= mVelY * deltaTime;
         shiftColliders();
     }
 }
 
 void Dot::render(SDL_Renderer* renderer, SDL_Rect& camera) {
-    mTexture->render(renderer, mPosX - camera.x, mPosY - camera.y);
+    mTexture->render(renderer, (int)mPosX - camera.x, (int)mPosY - camera.y);
     renderParticles(renderer, camera);
 }
 
@@ -114,7 +114,7 @@ void Dot::renderParticles(SDL_Renderer* renderer, SDL_Rect& camera) {
     for (int i = 0; i < TOTAL_PARTICLES; ++i) {
         if (particles[i]->isDead()) {
             delete particles[i];
-            particles[i] = new Particle(mPosX, mPosY, mParticleTextures);
+            particles[i] = new Particle((int)mPosX, (int)mPosY, mParticleTextures);
         }
     }
 
@@ -129,8 +129,8 @@ void Dot::shiftColliders() {
 }
 
 void Dot::setCamera(SDL_Rect& camera, int levelHeight, int levelWidth) {
-    camera.x = (mPosX + DOT_WIDTH / 2) - camera.w / 2;
-    camera.y = (mPosY + DOT_HEIGHT / 2) - camera.h / 2;
+    camera.x = ((int)mPosX + DOT_WIDTH / 2) - camera.w / 2;
+    camera.y = ((int)mPosY + DOT_HEIGHT / 2) - camera.h / 2;
 
     if( camera.x < 0 ) camera.x = 0;
     if( camera.y < 0 ) camera.y = 0;
@@ -143,9 +143,9 @@ Circle& Dot::getCollider() {
 }
 
 int Dot::getPosX() {
-    return mPosX;
+    return (int)mPosX;
 }
 
 int Dot::getPosY() {
-    return mPosY;
+    return (int)mPosY;
 }

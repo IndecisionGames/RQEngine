@@ -215,6 +215,7 @@ int main( int argc, char* args[] ) {
 
     SDL_Color textColor = {0, 255, 0};
 
+    Timer deltaTimer;
     Timer fpsTimer;
     Timer capTimer;
     Uint32 lastFrameTime = 0;
@@ -239,7 +240,9 @@ int main( int argc, char* args[] ) {
             dot.handleEvent(e);
         }
 
-        dot.move(LEVEL_HEIGHT, LEVEL_WIDTH, tileSet);
+        float deltaTime = deltaTimer.getTicks() / 1000.f;
+
+        dot.move(deltaTime, LEVEL_HEIGHT, LEVEL_WIDTH, tileSet);
         dot.setCamera(camera, LEVEL_HEIGHT, LEVEL_WIDTH);
 
         if (fpsTimer.getTicks() - lastFrameTime >= 1000) {
@@ -254,7 +257,7 @@ int main( int argc, char* args[] ) {
 
         gTimeTexture.loadFromRenderedText(gRenderer, gFont, timeText.str().c_str(), textColor);
 
-
+        deltaTimer.start();
         if(!gWindow.isMinimised()) {
             SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
             SDL_RenderClear(gRenderer);
