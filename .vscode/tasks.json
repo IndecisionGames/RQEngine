@@ -14,7 +14,7 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "xcopy /E /I /Y /D lib\\debug bin\\debug && g++ -c src/*.cpp -std=c++14 -g -Wall -m64 -I include -I F:/libraries/SDL2-w64/include && g++ *.o -o bin/debug/main -L F:/libraries/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf && xcopy /E /I /Y /D res bin\\debug\\res && start bin/debug/main",
+            "command": "xcopy /E /I /Y /D lib\\debug bin\\debug && g++ -c src/*.cpp -std=c++14 -g -Wall -m64 -I include -I F:/libraries/SDL2-w64/include -I F:/libraries/glew-2.2.0/include && g++ *.o -o bin/debug/main -L F:/libraries/SDL2-w64/lib -L F:/libraries/glew-2.2.0/lib/Release/x64 -lmingw32 -lglew32 -lOpenGL32 -lglu32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf && xcopy /E /I /Y /D res bin\\debug\\res && start bin/debug/main",
             "problemMatcher": ["$gcc"],
         },
         {

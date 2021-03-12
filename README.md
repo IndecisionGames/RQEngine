@@ -17,6 +17,7 @@ Requirement - [7zip](https://www.7-zip.org/)
     - [SDL2](https://www.libsdl.org/download-2.0.php) - Choose the MinGW 32/64 bit Development library
     - [SDL2_Image](https://www.libsdl.org/projects/SDL_image/) - Choose the MinGW 32/64 bit Development library
     - [SDL2_TTF](https://www.libsdl.org/projects/SDL_ttf/) - Choose the MinGW 32/64 bit Development library
+    - [GLEW](https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.zip/download)
 2) Unzip all files using 7zip into a temporary folder, you may have to unzip some of the files multiple times.
 3) Move the `mingw64` folder to a more permanent location such as `C:\mingw64` 
 4) Add the `/bin` folder inside this folder to your `PATH`. So if you placed MinGW64 in `C:\mingw64` then you would add `C:\mingw64\bin` to your system environment's PATH variable.

@@ -12,7 +12,7 @@ Window::Window() {
 }
 
 bool Window::init(int width, int height) {
-    mWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
+    mWindow = SDL_CreateWindow("RQ Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (mWindow != NULL) {
         mMouseFocus = true;
         mKeyboardFocus = true;
