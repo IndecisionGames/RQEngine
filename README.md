@@ -1,8 +1,8 @@
 # RQEngine
 
-## Current output
+<!-- ## Current output
 
-![Output](./res/result.gif)
+![Output](./res/result.gif) -->
 
 ## Getting started
 
