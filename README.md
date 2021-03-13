@@ -8,20 +8,16 @@
 
 Follow the steps below to get started.
 
-### Setting up SDL2 and MinGW64 for Windows Development
+### Setting up MinGW64 for Windows Development
 
 Requirement - [7zip](https://www.7-zip.org/)
 
 1) Download:
     - [MinGW64](https://sourceforge.net/projects/mingw-w64/)
-    - [SDL2](https://www.libsdl.org/download-2.0.php) - Choose the MinGW 32/64 bit Development library
-    - [SDL2_Image](https://www.libsdl.org/projects/SDL_image/) - Choose the MinGW 32/64 bit Development library
-    - [SDL2_TTF](https://www.libsdl.org/projects/SDL_ttf/) - Choose the MinGW 32/64 bit Development library
-    - [GLEW](https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.zip/download)
-2) Unzip all files using 7zip into a temporary folder, you may have to unzip some of the files multiple times.
+
+2) Unzip using 7zip into a temporary folder, you may have to unzip multiple times.
 3) Move the `mingw64` folder to a more permanent location such as `C:\mingw64` 
 4) Add the `/bin` folder inside this folder to your `PATH`. So if you placed MinGW64 in `C:\mingw64` then you would add `C:\mingw64\bin` to your system environment's PATH variable.
-5) Merge the contents of the `x86_64-mingw32` folders inside the SDL folders you extracted and move only the merged `x86_64-mingw32` folder to a permanent location such as `C:\x86_64-mingw32` (I recommend renaming this folder to something like `C:\SDL2-w64`)
 
 ### Setting up SDL2 in Xcode for Mac Development
 
@@ -40,18 +36,14 @@ Requirement - [7zip](https://www.7-zip.org/)
 
 #### _c_cpp_properties.json_
 
-Replace the following lines: 
+Replace the following line: 
 
 ```
-"F:\\libraries\\SDL2-w64\\include"
-
 "compilerPath": "F:/libraries/mingw64/bin/gcc.exe",
 ```
 
-With:
+with:
 ```
-"C:\\SDL2-w64\\include"
-
 "compilerPath": "C:/mingw64/bin/gcc.exe",
 ```
 
@@ -68,22 +60,7 @@ With:
 "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
 ```
 
-#### _tasks.json_
-
-In **both** `command` lines replace the following: 
-
-```
-F:/libraries/SDL2-w64/include
-F:/libraries/SDL2-w64/lib
-```
-
-With:
-```
-C:/SDL2-w64/include
-C:/SDL2-w64/lib
-```
-
-If everything has gone well you should be able to build and run the project with **F5**. A window should appear for a few seconds if it has worked.
+If everything has gone well you should be able to build and run the project with **Terminal > Run Build Task**. A window should appear for a few seconds if it has worked.
 
 ## Resources
 
