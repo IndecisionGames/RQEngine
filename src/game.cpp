@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <string>
 
-#include "Window.h"
+#include "RQEngine.h"
+
+using namespace RQEngine;
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -70,6 +72,7 @@ void printShaderLog(GLuint shader) {
         printf("Name %d is not a shader\n", shader);
     }
 }
+
 
 //Initializes rendering program and clear color
 void initGL() {
@@ -142,33 +145,12 @@ void initGL() {
     }
 }
 
-//Starts up SDL, creates window, and initializes OpenGL
-void init() {
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-    gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-    gContext = SDL_GL_CreateContext(gWindow);
-
-    glewExperimental = GL_TRUE;
-    GLenum glewError = glewInit();
-    if (glewError != GLEW_OK) printf("Error initialising GLEW! %s\n", glewGetErrorString(glewError));
-
-    // Vsync
-    SDL_GL_SetSwapInterval(1);
-    initGL();
-}
-
 //Input handler
 void handleKeys(unsigned char key, int x, int y) {
     if (key == 'q') gRenderQuad = !gRenderQuad;
 }
 
-//Per frame update
-void update();
-
+// TODO: Move into test game draw
 //Renders quad to the screen
 void render() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -189,15 +171,34 @@ void render() {
     }
 }
 
-//Frees media and shuts down SDL
-void close() {
-    glDeleteProgram(gProgramID);
-    SDL_DestroyWindow(gWindow);
-    gWindow = NULL;
-    SDL_Quit();
+// TODO: Refactor everything above
+
+Game::Game() {}
+Game::~Game() {}
+
+//Starts up SDL, creates window, and initializes OpenGL
+void Game::init() {
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+    gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+    gContext = SDL_GL_CreateContext(gWindow);
+
+    glewExperimental = GL_TRUE;
+    GLenum glewError = glewInit();
+    if (glewError != GLEW_OK) printf("Error initialising GLEW! %s\n", glewGetErrorString(glewError));
+
+    // Vsync
+    SDL_GL_SetSwapInterval(1);
+    initGL();
+
+    // Custom Init
+    onInit();
 }
 
-int main(int argc, char* args[]) {
+void Game::run() {
     init();
     bool quit = false;
 
@@ -206,8 +207,12 @@ int main(int argc, char* args[]) {
     SDL_StartTextInput();
 
     while (!quit) {
+        // TODO: Exact Events and Inputs into Manager
         while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) quit = true;
+            if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)){
+                quit = true;
+                break;
+            }
             if (e.type == SDL_TEXTINPUT) {
                 int x = 0, y = 0;
                 SDL_GetMouseState(&x, &y);
@@ -215,14 +220,31 @@ int main(int argc, char* args[]) {
             }
         }
 
+        // TODO: Add FPS Timer
+        fixedUpdate(0);
+        update();
+        draw();
+
         render();
 
         SDL_GL_SwapWindow(gWindow);
     }
 
-    SDL_StopTextInput();
-    close();
 
-    return 0;
+    exit();
 }
+
+
+void Game::exit() {
+     // Custom Exit
+    onExit();
+
+    SDL_StopTextInput();
+    glDeleteProgram(gProgramID);
+    SDL_DestroyWindow(gWindow);
+    gWindow = NULL;
+    SDL_Quit();
+}
+
+
 
