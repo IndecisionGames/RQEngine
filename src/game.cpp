@@ -1,9 +1,10 @@
 #include <SDL2/SDL.h>
 #include <gl/glew.h>
-#include <SDL2/SDL_opengl.h>
 #include <gl/glu.h>
+#include <SDL2/SDL_opengl.h>
 #include <stdio.h>
 #include <string>
+#include <iostream>
 
 #include "RQEngine.h"
 
@@ -11,6 +12,8 @@ using namespace RQEngine;
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+
+const uint32_t MAX_PHYSICS_TIMESTEP = 10; // ms
 
 SDL_Window* gWindow = NULL;
 SDL_GLContext gContext;
@@ -174,6 +177,7 @@ void render() {
 // TODO: Refactor everything above
 
 Game::Game() {}
+
 Game::~Game() {}
 
 //Starts up SDL, creates window, and initializes OpenGL
@@ -200,13 +204,14 @@ void Game::init() {
 
 void Game::run() {
     init();
-    bool quit = false;
 
     SDL_Event e;
-
     SDL_StartTextInput();
 
+    bool quit = false;
     while (!quit) {
+        deltaTime = fpsLimiter.startFrame();
+
         // TODO: Exact Events and Inputs into Manager
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)){
@@ -220,16 +225,23 @@ void Game::run() {
             }
         }
 
-        // TODO: Add FPS Timer
-        fixedUpdate(0);
-        update();
+        uint32_t timeStepRemaining = deltaTime;
+        while (timeStepRemaining > 0) {
+            if (timeStepRemaining < MAX_PHYSICS_TIMESTEP){
+                fixedUpdate(timeStepRemaining);
+                break;
+            }
+            timeStepRemaining -= MAX_PHYSICS_TIMESTEP;
+        }
+
+        update(deltaTime);
         draw();
 
         render();
-
         SDL_GL_SwapWindow(gWindow);
-    }
 
+        fpsLimiter.limit();
+    }
 
     exit();
 }

@@ -15,7 +15,7 @@ class TestGame: public Game {
     void onExit() {};
 
     void fixedUpdate(float deltaTime) {};
-    void update() {};
+    void update(float deltaTime) {};
 
     void draw() {};
 
