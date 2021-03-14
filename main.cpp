@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <glm/vec2.hpp>
 
 #include "RQEngine.h"
 
@@ -52,6 +53,8 @@ class TestGame: public RQEngine::Game {
 
 
 int main(int argc, char* args[]) {
+
+    glm::vec2 vector2 = glm::vec2(1.0f, 1.0f);
 
     TestGame game = TestGame();
 
