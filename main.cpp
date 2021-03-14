@@ -8,20 +8,40 @@
 
 #include "RQEngine.h"
 
-using namespace RQEngine;
+enum KeyCodes {
 
-class TestGame: public Game {
+    PLAYER_UP = 10,
+    PLAYER_DOWN,
+    PLAYER_LEFT,
+    PLAYER_RIGHT,
 
-    void onInit() {};
+    DEBUG = 100,
+};
+
+class TestGame: public RQEngine::Game {
+
+    void onInit() {
+
+        RQEngine::keyBind keys[5] = {
+            RQEngine::keyBind(PLAYER_UP, SDLK_w),
+            RQEngine::keyBind(PLAYER_DOWN, SDLK_s),
+            RQEngine::keyBind(PLAYER_LEFT, SDLK_a),
+            RQEngine::keyBind(PLAYER_RIGHT, SDLK_d),
+            RQEngine::keyBind(DEBUG, SDLK_p)
+        };
+
+        keyBinds->loadKeyBinds(keys, 5);
+
+    };
     void onExit() {};
 
     void fixedUpdate(float deltaTime) {};
     void update(float deltaTime) {
 
-        unsigned int keyHeldTime = inputManager->isKeyHeld(SDLK_p);
+        unsigned int keyHeldTime = inputManager->isKeyHeld(keyBinds->getKey(DEBUG));
         if (keyHeldTime > 0) {
             std::cout << "Key Held: " << keyHeldTime << std::endl;
-        } else if (inputManager->isKeyPressed(SDLK_p)) {
+        } else if (inputManager->isKeyPressed(keyBinds->getKey(DEBUG))) {
             std::cout << "Key Pressed" << std::endl;
         }
     };
@@ -29,6 +49,7 @@ class TestGame: public Game {
     void draw() {};
 
 };
+
 
 int main(int argc, char* args[]) {
 

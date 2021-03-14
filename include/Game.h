@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Limiter.h"
+#include "KeyBinds.h"
 #include "InputManager.h"
 #include "Window.h"
 
@@ -25,6 +26,7 @@ namespace RQEngine
             virtual void draw() = 0;
 
             InputManager* inputManager;
+            KeyBinds* keyBinds;
 
         private:
 

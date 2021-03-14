@@ -1,4 +1,5 @@
-#include "RQEngine.h"
+#include "InputManager.h"
+
 
 using namespace RQEngine;
 
@@ -16,18 +17,22 @@ InputManager* InputManager::getInstance() {
 }
 
 
-void InputManager::pressKey(unsigned int keyID, unsigned int deltaTime) {
-    if (keyMap[keyID] == true) {
-        keyHeldMap[keyID] += deltaTime;
-    } else {
-        keyMap[keyID] = true;
-        keyHeldMap[keyID] = 0;
-    }
+void InputManager::pressKey(unsigned int keyID) {
+    keyMap[keyID] = true;
 }
 
 void InputManager::releaseKey(unsigned int keyID) {
     keyMap[keyID] = false;
     keyHeldMap[keyID] = 0;
+}
+
+
+void InputManager::update(unsigned int deltaTime) {
+     for(auto it = keyMap.begin(); it != keyMap.end(); it++){
+         if(it->second){
+             keyHeldMap[it->first] += deltaTime;
+         }
+    }
 }
 
 

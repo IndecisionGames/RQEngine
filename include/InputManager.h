@@ -13,8 +13,10 @@ namespace RQEngine
         static InputManager* getInstance();
 
         // Used in Game Class only
-        static void pressKey(unsigned int keyID, unsigned int deltaTime);
+        static void pressKey(unsigned int keyID);
         static void releaseKey(unsigned int keyID);
+        static void update(unsigned int deltaTime);
+
 
         static bool isKeyPressed(unsigned int keyID);
         static unsigned int isKeyHeld(unsigned int keyID);

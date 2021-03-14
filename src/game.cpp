@@ -6,7 +6,7 @@
 #include <string>
 #include <iostream>
 
-#include "RQEngine.h"
+#include "Game.h"
 
 using namespace RQEngine;
 
@@ -180,6 +180,7 @@ Game::~Game() {}
 //Starts up SDL, creates window, and initializes OpenGL
 void Game::init() {
     inputManager = InputManager::getInstance();
+    keyBinds = KeyBinds::getInstance();
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -202,22 +203,25 @@ void Game::init() {
 }
 
 void Game::run() {
+    // Setup
     init();
 
     SDL_Event e;
     SDL_StartTextInput();
 
+    // Running
     bool quit = false;
     while (!quit) {
         deltaTime = fpsLimiter.startFrame();
 
+        // Process Events
         while (SDL_PollEvent(&e) != 0) {
             switch (e.type) {
                 case SDL_QUIT:
                     quit = true;
                     break;
                 case SDL_KEYDOWN:
-                    inputManager->pressKey(e.key.keysym.sym, deltaTime);
+                    inputManager->pressKey(e.key.keysym.sym);
                     break;
                 case SDL_KEYUP:
                     inputManager->releaseKey(e.key.keysym.sym);
@@ -230,6 +234,7 @@ void Game::run() {
             window->handleEvent(e);
         }
 
+        // Custom Game Physics Update
         uint32_t timeStepRemaining = deltaTime;
         while (timeStepRemaining > 0) {
             if (timeStepRemaining < MAX_PHYSICS_TIMESTEP){
@@ -239,12 +244,16 @@ void Game::run() {
             timeStepRemaining -= MAX_PHYSICS_TIMESTEP;
         }
 
+        // Custom Update and Draw
         update(deltaTime);
         draw();
+
+        // End of Frame Processing
 
         render();
         SDL_GL_SwapWindow(window->getWindow());
 
+        inputManager->update(deltaTime);
         fpsLimiter.limit();
     }
 

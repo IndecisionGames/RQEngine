@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-#include "RQEngine.h"
+#include "Limiter.h"
 
 using namespace RQEngine;
 
@@ -35,14 +35,14 @@ uint32_t Limiter::startFrame() {
 }
 
 void Limiter::update() {
-    frameCount++;
     if (frameCount >= FRAME_SAMPLE_RATE){
+        currentFPSEstimate = frameCount * 1000 / (startFrameTime - lastFrameSample);
         std::cout << "FPS: " << currentFPSEstimate << std::endl;
-        currentFPSEstimate = (startFrameTime - lastFrameSample) / frameCount;
         frameCount = 0;
         lastFrameSample = startFrameTime;
     }
 
+    frameCount++;
     previousFrameTime = startFrameTime;
 }
 
