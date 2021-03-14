@@ -7,7 +7,7 @@
 
 namespace RQEngine
 {
-    
+
     class Game {
 
         public:

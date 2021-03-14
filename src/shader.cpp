@@ -53,7 +53,7 @@ void printShaderLog(GLuint shader) {
         printf("Name %d is not a shader\n", shader);
     }
 }
-    
+
 
 using namespace RQEngine;
 
@@ -70,8 +70,6 @@ Shader::Shader(std::string vertexCode, std::string fragmentCode){
     glCompileShader(vertex);
 
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-
-
     if (!success) {
         printf("Unable to compile vertex shader %d!\n", vertex);
         printShaderLog(vertex);
@@ -95,10 +93,8 @@ Shader::Shader(std::string vertexCode, std::string fragmentCode){
     glAttachShader(ID, fragment);
     glLinkProgram(ID);
 
-
-    GLint programSuccess = GL_TRUE;
     glGetProgramiv(ID, GL_LINK_STATUS, &success);
-    if (programSuccess != GL_TRUE) {
+    if (!success) {
         printf("Error linking program %d!\n", ID);
         printProgramLog(ID);
     }
@@ -110,4 +106,12 @@ Shader::Shader(std::string vertexCode, std::string fragmentCode){
 
 void Shader::use(){
     glUseProgram(ID);
+}
+
+GLuint Shader::getID(){
+    return ID;
+}
+
+void Shader::free(){
+    glDeleteProgram(ID);
 }

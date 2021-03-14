@@ -4,7 +4,7 @@
 
 namespace RQEngine
 {
-    
+
     class Limiter {
 
         public:

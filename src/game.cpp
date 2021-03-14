@@ -9,8 +9,6 @@
 #include "Game.h"
 #include "Shader.h"
 
-using namespace RQEngine;
-
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
@@ -22,29 +20,29 @@ GLint gVertexPos2DLocation = -1;
 GLuint gVBO = 0;
 GLuint gIBO = 0;
 
+using namespace RQEngine;
+
 Shader* shader;
 
 //Initializes rendering program and clear color
 void initGL() {
     // Compline Shaders
-
     const GLchar* vertexShaderSource = {
         "#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
     };
-
     const GLchar* fragmentShaderSource = {
         "#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
     };
 
     shader = new Shader(vertexShaderSource, fragmentShaderSource);
 
-    gVertexPos2DLocation = glGetAttribLocation(shader->ID, "LVertexPos2D");
+    gVertexPos2DLocation = glGetAttribLocation(shader->getID(), "LVertexPos2D");
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
     GLfloat vertexData[] = {
         -0.5f, -0.5f,
-            0.5f, -0.5f,
-            0.5f,  0.5f,
+        0.5f, -0.5f,
+        0.5f,  0.5f,
         -0.5f,  0.5f
     };
 
@@ -61,11 +59,6 @@ void initGL() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW);
 }
 
-//Input handler
-void handleKeys(unsigned char key, int x, int y) {
-    if (key == 'q') gRenderQuad = !gRenderQuad;
-}
-
 // TODO: Move into test game draw
 //Renders quad to the screen
 void render() {
@@ -78,7 +71,7 @@ void render() {
 
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);
         glVertexAttribPointer(gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
-  
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
         glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
 
@@ -110,7 +103,7 @@ void Game::init() {
     GLenum glewError = glewInit();
     if (glewError != GLEW_OK) printf("Error initialising GLEW! %s\n", glewGetErrorString(glewError));
 
-    // Vsync
+    // VSync
     SDL_GL_SetSwapInterval(1);
     initGL();
 
@@ -123,7 +116,6 @@ void Game::run() {
     init();
 
     SDL_Event e;
-    SDL_StartTextInput();
 
     // Running
     bool quit = false;
@@ -138,17 +130,14 @@ void Game::run() {
                     break;
                 case SDL_KEYDOWN:
                     if (e.key.keysym.sym == SDLK_ESCAPE) quit = true;
-                    inputManager->pressKey(e.key.keysym.sym);
                     break;
-                case SDL_KEYUP:
-                    inputManager->releaseKey(e.key.keysym.sym);
-                    break;
-                case SDL_TEXTINPUT:
-                    int x = 0, y = 0;
-                    SDL_GetMouseState(&x, &y);
-                    handleKeys(e.text.text[0], x, y);
             }
+            inputManager->handleEvent(e);
             window->handleEvent(e);
+        }
+
+        if (inputManager->isKeyPressedInitial(SDLK_q)) {
+            gRenderQuad = !gRenderQuad;
         }
 
         // Custom Game Physics Update
@@ -166,7 +155,6 @@ void Game::run() {
         draw();
 
         // End of Frame Processing
-
         render();
         SDL_GL_SwapWindow(window->getWindow());
 
@@ -182,11 +170,7 @@ void Game::exit() {
      // Custom Exit
     onExit();
 
-    SDL_StopTextInput();
-    glDeleteProgram(shader->ID);
+    shader->free();
     delete window;
     SDL_Quit();
 }
-
-
-
