@@ -2,6 +2,7 @@
 
 #include "Limiter.h"
 #include "InputManager.h"
+#include "Window.h"
 
 namespace RQEngine
 {
@@ -31,6 +32,7 @@ namespace RQEngine
 
             Limiter fpsLimiter;
             uint32_t deltaTime;
+            Window* window;
 
     };
 

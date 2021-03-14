@@ -1,30 +1,36 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include <stdio.h>
-#include <sstream>
 
-class Window {
-    private:
-        SDL_Window* mWindow;
-        SDL_Renderer* mRenderer;
+namespace RQEngine {
 
-        int mWidth;
-        int mHeight;
-        bool mMouseFocus;
-        bool mKeyboardFocus;
-        bool mFullScreen;
-        bool mMinimised;
-    
-    public:
-        Window();
-        bool init(int width, int height);
-        SDL_Renderer* createRenderer(bool vsync);
-        void handleEvent(SDL_Event& e);
-        void free();
-        int getWidth();
-        int getHeight();
-        bool hadMouseFocus();
-        bool hadKeyboardFocus();
-        bool isMinimised();
-};
+    class Window {
+
+        public:
+            Window();
+            ~Window();
+            bool init(int width, int height);
+            void handleEvent(SDL_Event& e);
+            void free();
+
+            int getWidth(){return mWidth;};
+            int getHeight(){return mHeight;};
+            bool hadMouseFocus(){return mMouseFocus;};
+            bool hadKeyboardFocus(){return mKeyboardFocus;};
+            bool isMinimised(){return mMinimised;};
+            SDL_GLContext* getContext(){return &mContext;};
+            SDL_Window* getWindow(){return mWindow;};
+
+        private:
+            SDL_Window* mWindow;
+            SDL_GLContext mContext;
+
+            int mWidth;
+            int mHeight;
+            bool mMouseFocus;
+            bool mKeyboardFocus;
+            bool mFullScreen;
+            bool mMinimised;
+    };
+
+} // namespace RQEngine

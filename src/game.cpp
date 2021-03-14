@@ -15,9 +15,6 @@ const int SCREEN_HEIGHT = 480;
 
 const uint32_t MAX_PHYSICS_TIMESTEP = 10; // ms
 
-SDL_Window* gWindow = NULL;
-SDL_GLContext gContext;
-
 bool gRenderQuad = true;
 
 GLuint gProgramID = 0;
@@ -189,8 +186,8 @@ void Game::init() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-    gContext = SDL_GL_CreateContext(gWindow);
+    window = new Window();
+    window->init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();
@@ -230,6 +227,7 @@ void Game::run() {
                     SDL_GetMouseState(&x, &y);
                     handleKeys(e.text.text[0], x, y);
             }
+            window->handleEvent(e);
         }
 
         uint32_t timeStepRemaining = deltaTime;
@@ -245,7 +243,7 @@ void Game::run() {
         draw();
 
         render();
-        SDL_GL_SwapWindow(gWindow);
+        SDL_GL_SwapWindow(window->getWindow());
 
         fpsLimiter.limit();
     }
@@ -260,8 +258,7 @@ void Game::exit() {
 
     SDL_StopTextInput();
     glDeleteProgram(gProgramID);
-    SDL_DestroyWindow(gWindow);
-    gWindow = NULL;
+    delete window;
     SDL_Quit();
 }
 
