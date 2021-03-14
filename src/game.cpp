@@ -182,6 +182,8 @@ Game::~Game() {}
 
 //Starts up SDL, creates window, and initializes OpenGL
 void Game::init() {
+    inputManager = InputManager::getInstance();
+
     SDL_Init(SDL_INIT_VIDEO);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
@@ -212,16 +214,21 @@ void Game::run() {
     while (!quit) {
         deltaTime = fpsLimiter.startFrame();
 
-        // TODO: Exact Events and Inputs into Manager
         while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)){
-                quit = true;
-                break;
-            }
-            if (e.type == SDL_TEXTINPUT) {
-                int x = 0, y = 0;
-                SDL_GetMouseState(&x, &y);
-                handleKeys(e.text.text[0], x, y);
+            switch (e.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                case SDL_KEYDOWN:
+                    inputManager->pressKey(e.key.keysym.sym, deltaTime);
+                    break;
+                case SDL_KEYUP:
+                    inputManager->releaseKey(e.key.keysym.sym);
+                    break;
+                case SDL_TEXTINPUT:
+                    int x = 0, y = 0;
+                    SDL_GetMouseState(&x, &y);
+                    handleKeys(e.text.text[0], x, y);
             }
         }
 

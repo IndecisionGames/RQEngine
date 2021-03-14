@@ -7,7 +7,7 @@
 using namespace RQEngine;
 
 const int DEFAULT_FRAME_RATE = 60;
-const uint32_t FRAME_SAMPLE_RATE = 5 * DEFAULT_FRAME_RATE ;
+const uint32_t FRAME_SAMPLE_RATE = 3 * DEFAULT_FRAME_RATE;
 
 
 Limiter::Limiter() {
@@ -47,10 +47,10 @@ void Limiter::update() {
 }
 
 void Limiter::limit() {
-    uint32_t frameTime = SDL_GetTicks() - startFrameTime;
+    update();
 
+    uint32_t frameTime = SDL_GetTicks() - startFrameTime;
     if (frameTime < targetFrameTime) {
         SDL_Delay(targetFrameTime - frameTime);
     }
-    update();
 }

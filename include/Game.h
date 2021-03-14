@@ -1,4 +1,7 @@
+#pragma once
+
 #include "Limiter.h"
+#include "InputManager.h"
 
 namespace RQEngine
 {
@@ -20,6 +23,7 @@ namespace RQEngine
 
             virtual void draw() = 0;
 
+            InputManager* inputManager;
 
         private:
 

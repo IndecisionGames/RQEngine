@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Tile.h"
 #include "Limiter.h"
+#include "InputManager.h"
 #include "Timer.h"
 #include "Window.h"
 #include "Game.h"

@@ -4,6 +4,7 @@
 #include <gl/glu.h>
 #include <stdio.h>
 #include <string>
+#include <iostream>
 
 #include "RQEngine.h"
 
@@ -15,7 +16,15 @@ class TestGame: public Game {
     void onExit() {};
 
     void fixedUpdate(float deltaTime) {};
-    void update(float deltaTime) {};
+    void update(float deltaTime) {
+
+        unsigned int keyHeldTime = inputManager->isKeyHeld(SDLK_p);
+        if (keyHeldTime > 0) {
+            std::cout << "Key Held: " << keyHeldTime << std::endl;
+        } else if (inputManager->isKeyPressed(SDLK_p)) {
+            std::cout << "Key Pressed" << std::endl;
+        }
+    };
 
     void draw() {};
 
