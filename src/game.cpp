@@ -221,6 +221,7 @@ void Game::run() {
                     quit = true;
                     break;
                 case SDL_KEYDOWN:
+                    if (e.key.keysym.sym == SDLK_ESCAPE) quit = true;
                     inputManager->pressKey(e.key.keysym.sym);
                     break;
                 case SDL_KEYUP:
