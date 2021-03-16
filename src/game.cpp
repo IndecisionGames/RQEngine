@@ -16,9 +16,7 @@ const uint32_t MAX_PHYSICS_TIMESTEP = 10; // ms
 
 bool gRenderQuad = true;
 
-GLint gVertexPos2DLocation = -1;
 GLuint gVBO = 0;
-GLuint gIBO = 0;
 
 using namespace RQEngine;
 
@@ -26,56 +24,43 @@ Shader* shader;
 
 //Initializes rendering program and clear color
 void initGL() {
+    GLuint VertexArrayID;
+    glGenVertexArrays(1, &VertexArrayID);
+    glBindVertexArray(VertexArrayID);
+
     // Compline Shaders
-    const GLchar* vertexShaderSource = {
-        "#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
-    };
-    const GLchar* fragmentShaderSource = {
-        "#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
-    };
+    shader = new Shader("src/shaders/SimpleVertexShader.glsl", "src/shaders/SimpleFragmentShader.glsl");
 
-    shader = new Shader(vertexShaderSource, fragmentShaderSource);
-
-    gVertexPos2DLocation = glGetAttribLocation(shader->getID(), "LVertexPos2D");
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClearColor(0.f, 0.f, 0.06f, 1.f);
 
     GLfloat vertexData[] = {
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        0.5f,  0.5f,
-        -0.5f,  0.5f
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.5f,  0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
     };
-
-    GLuint indexData[] = {0, 1, 2, 3};
 
     // Create VBO
     glGenBuffers(1, &gVBO);
     glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-    glBufferData(GL_ARRAY_BUFFER, 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW);
-
-    // Create IBO
-    glGenBuffers(1, &gIBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 }
 
 // TODO: Move into test game draw
 //Renders quad to the screen
 void render() {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if(gRenderQuad) {
         shader->use();
 
-        glEnableVertexAttribArray(gVertexPos2DLocation);
-
+        glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-        glVertexAttribPointer(gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-        glDisableVertexAttribArray(gVertexPos2DLocation);
+        glDisableVertexAttribArray(0);
         glUseProgram(0);
     }
 }

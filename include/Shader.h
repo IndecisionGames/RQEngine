@@ -9,9 +9,7 @@ namespace RQEngine
     class Shader {
 
         public:
-            // TODO: From FilePath
-            // Shader(const char* vertexPath, const char* fragmentPath);
-            Shader(std::string vertexCode, std::string fragmentCode);
+            Shader(const char* vertexPath, const char* fragmentPath);
 
             GLuint getID();
             void use();
@@ -19,8 +17,7 @@ namespace RQEngine
             void free();
 
         private:
-            // program ID
-            GLuint ID;
+            GLuint ProgramID;
     };
 
 } // namespace RQEngine
