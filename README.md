@@ -1,11 +1,11 @@
 # RQEngine 
-[![Build Status](https://travis-ci.com/IndecisionGames/ProjectBD.svg?branch=main)](https://travis-ci.com/IndecisionGames/ProjectBD)
+[![Build Status](https://travis-ci.com/IndecisionGames/RQEngine.svg?branch=main)](https://travis-ci.com/IndecisionGames/RQEngine)
 
 <!-- ## Current output
 
 ![Output](./res/result.gif) -->
 
-## Getting started
+## Getting startedSS
 
 Follow the steps below to get started.
 
