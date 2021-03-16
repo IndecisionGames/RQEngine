@@ -1,4 +1,5 @@
-# RQEngine
+# RQEngine 
+[![Build Status](https://travis-ci.com/IndecisionGames/ProjectBD.svg?branch=main)](https://travis-ci.com/IndecisionGames/ProjectBD)
 
 <!-- ## Current output
 
