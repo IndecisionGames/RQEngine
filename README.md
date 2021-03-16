@@ -5,7 +5,7 @@
 
 ![Output](./res/result.gif) -->
 
-## Getting startedSS
+## Getting started
 
 Follow the steps below to get started.
 
