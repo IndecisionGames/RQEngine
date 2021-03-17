@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <SDL2/SDL.h>
+#include <glm/vec2.hpp>
 
 namespace RQEngine
 {
@@ -20,7 +21,9 @@ namespace RQEngine
             static bool isKeyPressedInitial(unsigned int keyID);
             static unsigned int isKeyHeld(unsigned int keyID);
 
-            // TODO Add Mouse
+            static glm::uvec2 getMousePosition();
+            static glm::ivec2 getMouseMotion();
+            static glm::ivec2 getMouseWheelMotion();
 
         private:
 
@@ -31,8 +34,9 @@ namespace RQEngine
             static std::unordered_map<unsigned int, bool> keyMap;
             static std::unordered_map<unsigned int, unsigned int> keyHeldMap;
 
-            static void pressKey(unsigned int keyID);
-            static void releaseKey(unsigned int keyID);
+            static glm::uvec2 mousePosition;
+            static glm::ivec2 mouseMotion;
+            static glm::ivec2 mouseWheelMotion;
     };
 
 } // namespace RQEngine

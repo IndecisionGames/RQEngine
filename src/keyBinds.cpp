@@ -15,8 +15,8 @@ KeyBinds* KeyBinds::getInstance() {
     return instance;
 }
 
-void KeyBinds::loadKeyBinds(keyBind keyBindings[], int NumBindings){
-     for(int i = 0; i < NumBindings; i++){
+void KeyBinds::loadKeyBinds(keyBind *keyBindings){
+     for(int i = 0; i < sizeof(keyBindings); i++){
         keyBindingMap[keyBindings[i].first] = keyBindings[i].second;
     }
 }

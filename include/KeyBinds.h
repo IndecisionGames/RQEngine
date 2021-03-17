@@ -15,7 +15,7 @@ namespace RQEngine
             static KeyBinds* getInstance();
 
             //TODO: Use variadic function
-            static void loadKeyBinds(keyBind keyBindings[], int NumBindings);
+            static void loadKeyBinds(keyBind *keyBindings);
             static void updateKeyBind(keyBind keyBinding);
 
             static unsigned int getKey(unsigned int customKeyID);

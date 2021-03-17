@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include <iostream>
 
 using namespace RQEngine;
 
@@ -6,6 +7,9 @@ using namespace RQEngine;
 InputManager* InputManager::instance = 0;
 std::unordered_map<unsigned int, bool> InputManager::keyMap;
 std::unordered_map<unsigned int, unsigned int> InputManager::keyHeldMap;
+glm::uvec2 InputManager::mousePosition;
+glm::ivec2 InputManager::mouseMotion;
+glm::ivec2 InputManager::mouseWheelMotion;
 
 InputManager::InputManager() {}
 
@@ -16,22 +20,42 @@ InputManager* InputManager::getInstance() {
     return instance;
 }
 
-void InputManager::pressKey(unsigned int keyID) {
-    keyMap[keyID] = true;
+glm::uvec2 InputManager::getMousePosition(){
+    return mousePosition;
 }
 
-void InputManager::releaseKey(unsigned int keyID) {
-    keyMap[keyID] = false;
-    keyHeldMap[keyID] = 0;
+glm::ivec2 InputManager::getMouseMotion(){
+    return mouseMotion;
+}
+
+glm::ivec2 InputManager::getMouseWheelMotion(){
+    return mouseWheelMotion;
 }
 
 void InputManager::handleEvent(SDL_Event& e){
  switch (e.type) {
     case SDL_KEYDOWN:
-        pressKey(e.key.keysym.sym);
+        keyMap[e.key.keysym.sym] = true;
         break;
     case SDL_KEYUP:
-        releaseKey(e.key.keysym.sym);
+        keyMap[e.key.keysym.sym] = false;
+        keyHeldMap[e.key.keysym.sym] = 0;
+        break;
+
+    case SDL_MOUSEBUTTONDOWN:
+        keyMap[e.button.button] = true;
+        break;
+    case SDL_MOUSEBUTTONUP :
+        keyMap[e.button.button] = false;
+        keyHeldMap[e.button.button] = 0;
+        break;
+
+    case SDL_MOUSEMOTION:
+        mousePosition = glm::uvec2(e.motion.x, e.motion.y);
+        mouseMotion = glm::ivec2(e.motion.xrel, e.motion.yrel);
+        break;
+    case SDL_MOUSEWHEEL:
+        mouseWheelMotion = glm::uvec2(e.wheel.x, e.wheel.y);
         break;
     }
 }
@@ -42,6 +66,8 @@ void InputManager::update(unsigned int deltaTime) {
              keyHeldMap[it->first] += deltaTime;
          }
     }
+    mouseMotion = glm::ivec2(0, 0);
+    mouseWheelMotion = glm::ivec2(0, 0);
 }
 
 bool InputManager::isKeyPressed(unsigned int keyID) {
