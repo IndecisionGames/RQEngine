@@ -22,8 +22,9 @@ LINKER_FLAGS = -lmingw32 -lglew32 -lOpenGL32 -lglu32 -lSDL2main -lSDL2 -lSDL2_im
 all:Build
 
 Build:
-	mkdir -p $(B_DIR)
+	mkdir -p $(B_DIR)/$(R_DIR)
 	yes|cp -ruv $(L_DIR)/* $(B_DIR)/.
+	yes|cp -ruv $(R_DIR)/* $(B_DIR)/$(R_DIR)/.
 	$(CC) main.cpp $(S_FILES) $(COMPILER_FLAGS) $(INCLUDE_FLAGS) $(LIBRARY_FLAGS) $(LINKER_FLAGS) -o $(EXEC) 
 
 run:Build
