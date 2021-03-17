@@ -38,11 +38,16 @@ Build:
 run:Build
 	$(EXEC)
 
+osx-prep:
+	brew install sdl2 sdl2_image sdl2_ttf glew glm
+
 osx:
 	mkdir -p $(B_DIR)/$(R_DIR)
 	rsync -auv $(R_DIR)/ $(B_DIR)/$(R_DIR)/
 	$(CC) main.cpp $(S_FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(EXEC) 
 	$(EXEC)
+
+osx-full:osx-prep osx
 
 clean:
 	rm -rf $(B_ROOT)
