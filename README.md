@@ -1,9 +1,6 @@
 # RQEngine 
 [![Build Status](https://travis-ci.com/IndecisionGames/RQEngine.svg?branch=main)](https://travis-ci.com/IndecisionGames/RQEngine)
 
-<!-- ## Current output
-
-![Output](./res/result.gif) -->
 
 ## Getting started
 
@@ -42,6 +39,19 @@ To build **and** run the project use:
 ```
 mingw32-make.exe run
 ```
+
+### Using make in OSX
+
+Download dependencies using:
+```
+brew install sdl2 sdl2_image sdl2_ttf glew glm
+```
+
+To build and run the project use: 
+```
+make osx
+```
+
 
 ### Setting up VSCode for Windows
 

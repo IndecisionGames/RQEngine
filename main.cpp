@@ -1,7 +1,4 @@
 #include <SDL2/SDL.h>
-#include <gl/glew.h>
-#include <SDL2/SDL_opengl.h>
-#include <gl/glu.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>

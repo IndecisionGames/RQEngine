@@ -1,6 +1,14 @@
 #pragma once
 
-#include <gl/glew.h>
+#include <GL/glew.h>
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <gl/gl.h>
+#include <gl/glu.h>
+#endif
+#include <SDL2/SDL_opengl.h>
 #include <string>
 
 namespace RQEngine

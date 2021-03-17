@@ -14,11 +14,18 @@ EXEC=$(B_DIR)/RQEngine
 # Build settings
 CC=g++
 
+# Win
 COMPILER_FLAGS = -std=c++14 -g -Wall -m64
 INCLUDE_FLAGS = -I include -I ${LIBS_DIR}/SDL2-w64/include -I ${LIBS_DIR}/glew-2.2.0/include -I ${LIBS_DIR}/glm/
 LIBRARY_FLAGS = -L ${LIBS_DIR}/SDL2-w64/lib -L ${LIBS_DIR}/glew-2.2.0/lib/Release/x64
 LINKER_FLAGS = -lmingw32 -lglew32 -lOpenGL32 -lglu32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
+# OSX
+CFLAGS = -std=c++14 -g -Wall -I/usr/local/include/SDL2 -I/usr/local/include/GL -I/usr/local/include/glm -Iinclude
+LDFLAGS:= -L/usr/local/lib
+LDLIBS:= -framework OpenGL -lGLEW -lSDL2 -lSDL2_image -lSDL2_ttf 
+
+# Build for windows by default
 all:Build
 
 Build:
@@ -28,6 +35,12 @@ Build:
 	$(CC) main.cpp $(S_FILES) $(COMPILER_FLAGS) $(INCLUDE_FLAGS) $(LIBRARY_FLAGS) $(LINKER_FLAGS) -o $(EXEC) 
 
 run:Build
+	$(EXEC)
+
+osx:
+	mkdir -p $(B_DIR)/$(R_DIR)
+	rsync -auv $(R_DIR)/ $(B_DIR)/$(R_DIR)/
+	$(CC) main.cpp $(S_FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(EXEC) 
 	$(EXEC)
 
 clean:
