@@ -9,6 +9,7 @@
 
 Follow the steps below to get started.
 
+
 ### Setting up MinGW64 for Windows Development
 
 Requirement - [7zip](https://www.7-zip.org/)
@@ -27,6 +28,20 @@ Requirement - [7zip](https://www.7-zip.org/)
 3) Open the target settings by clicking on the xcodeproj file
 4) General -> Add Frameworks and Libraries -> add `libSDL2-2.0.0.dylib`, `libSDL2_image-2.0.0.dylib` and `libSDL2_ttf-2.0.0.dylib`
 5) Build Settings -> Search Paths -> Header Search Paths -> add `/usr/local/include`
+
+### Using make in Windows
+
+You need to use a bash terminal, such as [Git BASH](https://gitforwindows.org/) from the root directory.
+
+To build the project use: 
+```
+mingw32-make.exe
+```
+
+To build **and** run the project use:
+```
+mingw32-make.exe run
+```
 
 ### Setting up VSCode for Windows
 
