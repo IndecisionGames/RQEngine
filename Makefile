@@ -2,6 +2,7 @@
 S_DIR=src
 R_DIR=res
 L_DIR=lib/debug
+B_ROOT=bin
 B_DIR=bin/debug
 LIBS_DIR=lib/third-party
 
@@ -44,4 +45,4 @@ osx:
 	$(EXEC)
 
 clean:
-	rm -rf $(B_DIR)/*
+	rm -rf $(B_ROOT)
