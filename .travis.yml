@@ -2,4 +2,7 @@ os: osx
 osx_image: xcode12.2
 language: cpp
 compiler: gcc
-script: make osx-full
+before_install:
+- brew update
+- brew install sdl2 sdl2_image sdl2_ttf glew glm
+script: make osx-build
