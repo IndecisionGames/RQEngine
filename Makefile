@@ -33,7 +33,8 @@ Build:
 	mkdir -p $(B_DIR)/$(R_DIR)
 	yes|cp -ruv $(L_DIR)/* $(B_DIR)/.
 	yes|cp -ruv $(R_DIR)/* $(B_DIR)/$(R_DIR)/.
-	$(CC) main.cpp $(S_FILES) $(COMPILER_FLAGS) $(INCLUDE_FLAGS) $(LIBRARY_FLAGS) $(LINKER_FLAGS) -o $(EXEC) 
+	if $(CC) main.cpp $(S_FILES) $(COMPILER_FLAGS) $(INCLUDE_FLAGS) $(LIBRARY_FLAGS) $(LINKER_FLAGS) -o $(EXEC); then echo -e "\nBUILD SUCCEEDED\n"; else echo -e "\nBUILD FAILED\n"; fi
+
 
 run:Build
 	$(EXEC)
@@ -41,7 +42,7 @@ run:Build
 osx-build:
 	mkdir -p $(B_DIR)/$(R_DIR)
 	rsync -auv $(R_DIR)/ $(B_DIR)/$(R_DIR)/
-	$(CC) main.cpp $(S_FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(EXEC) 
+	if $(CC) main.cpp $(S_FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(EXEC); then echo -e "\nBUILD SUCCEEDED\n"; else echo -e "\nBUILD FAILED\n"; fi 
 
 osx:osx-build
 	$(EXEC)
