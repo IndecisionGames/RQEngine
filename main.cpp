@@ -66,7 +66,8 @@ class TestGame: public RQEngine::Game {
 
 int main(int argc, char* args[]) {
 
-    glm::vec2 vector2 = glm::vec2(1.0f, 1.0f);
+    glm::vec2 vector2a = glm::vec2(1.0f, 1.0f);
+    glm::vec2 vector2b = glm::vec2(2.0f, 2.0f);
 
     TestGame game = TestGame();
 

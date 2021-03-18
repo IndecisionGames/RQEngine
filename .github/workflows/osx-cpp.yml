@@ -1,0 +1,22 @@
+name: OSX 10.15
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: update
+      run: brew update
+    - name: download
+      run: brew install sdl2 sdl2_image sdl2_ttf glew glm
+    - name: make
+      run: make osx-build
+

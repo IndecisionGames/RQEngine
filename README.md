@@ -1,5 +1,13 @@
 # RQEngine 
-[![Build Status](https://travis-ci.com/IndecisionGames/RQEngine.svg?branch=main)](https://travis-ci.com/IndecisionGames/RQEngine)
+
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/IndecisionGames/RQEngine/Win%2064-bit?label=Win%2064-bit&logo=windows)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/IndecisionGames/RQEngine/OSX%2010.15?label=OSX%2010.15&logo=apple)
+
+![GitHub pull requests](https://img.shields.io/github/issues-pr/IndecisionGames/RQEngine)
+![GitHub contributors](https://img.shields.io/github/contributors/IndecisionGames/RQEngine)
+![GitHub repo size](https://img.shields.io/github/repo-size/IndecisionGames/RQEngine?label=size)
+![GitHub loc](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Sivarjuen/0dcf4bcb56b05761ea94e6abaf6ee405/raw/RQEngineLOC.json)
+
 
 
 ## Getting started
