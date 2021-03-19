@@ -26,9 +26,14 @@ bool gRenderQuad = true;
 
 GLuint gIBO = 0;
 GLuint gVBO = 0;
-GLuint gMatrixID = 0;
+
+GLuint gModelID = 0;
+GLuint gViewID = 0;
+GLuint gProjectionID = 0;
 
 RQEngine::Shader* shader;
+
+Timer timer = Timer();
 
 //Initializes rendering program and clear color
 void initGL() {
@@ -36,9 +41,14 @@ void initGL() {
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     // Compline Shaders
     shader = new RQEngine::Shader("src/shaders/SimpleVertexShader.glsl", "src/shaders/SimpleFragmentShader.glsl");
-    gMatrixID = glGetUniformLocation(*(shader->getID()), "MVP");
+    gModelID = glGetUniformLocation(*(shader->getID()), "Model");
+    gViewID = glGetUniformLocation(*(shader->getID()), "View");
+    gProjectionID = glGetUniformLocation(*(shader->getID()), "Projection");
 
     glClearColor(0.f, 0.f, 0.06f, 1.f);
 
@@ -151,8 +161,8 @@ class TestGame: public RQEngine::Game {
         };
         keyBinds->loadKeyBinds(keys);
 
+        timer.start();
         initGL();
-
     };
 
     void onExit() {
@@ -209,22 +219,21 @@ void TestGame::render() {
             glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
         );
 
+        float time = (float)timer.getTicks() / 100;
+
         // Model matrix
-        glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 1.0f));
-        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(time), glm::vec3(0.0f, 1.0f, 0.0f));
         glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
         glm::mat4 Model = translationMatrix * rotationMatrix * scaleMatrix;
         //glm::mat4 Model = glm::mat4(1.0f);
 
-        // Our ModelViewProjection : multiplication of our 3 matrices
-        glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
         shader->use();
 
-        // Send our transformation to the currently bound shader, in the "MVP" uniform
-        // This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
-        glUniformMatrix4fv(gMatrixID, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(gModelID, 1, GL_FALSE, &Model[0][0]);
+        glUniformMatrix4fv(gViewID, 1, GL_FALSE, &View[0][0]);
+        glUniformMatrix4fv(gProjectionID, 1, GL_FALSE, &Projection[0][0]);
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);
