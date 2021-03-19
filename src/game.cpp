@@ -11,6 +11,7 @@ const int SCREEN_HEIGHT = 1080;
 
 const uint32_t MAX_PHYSICS_TIMESTEP = 10; // ms
 
+
 using namespace RQEngine;
 
 Game::Game() {}
