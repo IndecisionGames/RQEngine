@@ -19,7 +19,7 @@ namespace RQEngine
         public:
             Shader(const char* vertexPath, const char* fragmentPath);
 
-            GLuint getID();
+            GLuint* getID();
             void use();
 
             void free();

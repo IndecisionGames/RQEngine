@@ -95,8 +95,8 @@ void Shader::use(){
     glUseProgram(ProgramID);
 }
 
-GLuint Shader::getID(){
-    return ProgramID;
+GLuint* Shader::getID(){
+    return &ProgramID;
 }
 
 void Shader::free(){
