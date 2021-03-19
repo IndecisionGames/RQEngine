@@ -28,13 +28,13 @@ namespace RQEngine
             InputManager* inputManager;
             KeyBinds* keyBinds;
 
+            Window* window;
+
         private:
 
             void init();
 
             Limiter fpsLimiter;
-            uint32_t deltaTime;
-            Window* window;
 
     };
 
