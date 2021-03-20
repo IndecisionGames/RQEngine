@@ -10,19 +10,23 @@
 
 enum KeyCodes {
 
-    PLAYER_UP = 10,
-    PLAYER_DOWN,
+    PLAYER_FORWARD = 10,
+    PLAYER_BACK,
     PLAYER_LEFT,
     PLAYER_RIGHT,
+    PLAYER_UP,
+    PLAYER_DOWN,
 
     FIRE = 50,
     AIM,
 
-    DEBUG = 100,
+    RESET = 100,
 };
 
 
 bool gRenderQuad = true;
+glm::vec3 CameraPosition = glm::vec3(0,0,-6);
+glm::vec2 CameraRotation = glm::vec2(0,0);
 
 GLuint gIBO = 0;
 GLuint gVBO = 0;
@@ -161,12 +165,14 @@ class TestGame: public RQEngine::Game {
 
     void onInit() {
 
-        RQEngine::keyBind keys[7] = {
-            RQEngine::keyBind(PLAYER_UP, SDLK_w),
-            RQEngine::keyBind(PLAYER_DOWN, SDLK_s),
+        RQEngine::keyBind keys[9] = {
+            RQEngine::keyBind(PLAYER_FORWARD, SDLK_w),
+            RQEngine::keyBind(PLAYER_BACK, SDLK_s),
             RQEngine::keyBind(PLAYER_LEFT, SDLK_a),
             RQEngine::keyBind(PLAYER_RIGHT, SDLK_d),
-            RQEngine::keyBind(DEBUG, SDLK_p),
+            RQEngine::keyBind(PLAYER_UP, SDLK_LSHIFT),
+            RQEngine::keyBind(PLAYER_DOWN, SDLK_LCTRL),
+            RQEngine::keyBind(RESET, SDLK_r),
             RQEngine::keyBind(FIRE, SDL_BUTTON_LEFT),
             RQEngine::keyBind(AIM, SDL_BUTTON_RIGHT)
         };
@@ -184,20 +190,39 @@ class TestGame: public RQEngine::Game {
 
     void update(float deltaTime) {
 
-        unsigned int keyHeldTime = inputManager->isKeyHeld(keyBinds->getKey(DEBUG));
-        if (keyHeldTime > 0) {
-            std::cout << "Key Held: " << keyHeldTime << std::endl;
-        } else if (inputManager->isKeyPressed(keyBinds->getKey(DEBUG))) {
-            std::cout << "Key Pressed" << std::endl;
-        }
-
-        if (inputManager->isKeyPressedInitial(keyBinds->getKey(AIM))) {
-            glm::uvec2 mousePos = inputManager->getMousePosition();
+        if (inputManager->isKeyPressed(keyBinds->getKey(AIM))) {
             glm::ivec2 mouseMotion = inputManager->getMouseMotion();
 
-            printf("Position: (%u, %u)\n", mousePos.x, mousePos.y);
-            printf("Motion: (%i,%i)\n", mouseMotion.x, mouseMotion.y);
+            CameraRotation += (glm::vec2)mouseMotion * glm::vec2(0.1f, 0.1f);
         }
+        if(inputManager->isKeyPressed(keyBinds->getKey(RESET))){
+            CameraRotation = glm::vec2(0.1f, 0.1f);
+        }
+
+        // Note: Movement is still relative to world, not camera direction
+        float moveVal = 0.005f * deltaTime;
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_FORWARD))){
+            CameraPosition.z += moveVal;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_BACK))){
+            CameraPosition.z -= moveVal;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_LEFT))){
+            CameraPosition.x += moveVal;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_RIGHT))){
+            CameraPosition.x -= moveVal;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_UP))){
+            CameraPosition.y -= moveVal;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
+            CameraPosition.y += moveVal;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
+            CameraPosition.y += moveVal;
+        }
+
 
         if (inputManager->isKeyPressedInitial(SDLK_q)) {
             gRenderQuad = !gRenderQuad;
@@ -224,15 +249,15 @@ void TestGame::render() {
         // glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
 
         // Camera matrix
-        glm::mat4 View = glm::lookAt(
-            glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-            glm::vec3(0,0,0), // and looks at the origin
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-        );
+        glm::mat4 camScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        glm::mat4 camRotationMatrixX = glm::rotate(glm::mat4(1.0f), glm::radians(CameraRotation.x), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 camTranslationMatrix = glm::translate(glm::mat4(1.0f), CameraPosition);
 
-        float time = (float)timer.getTicks() / 10;
+        glm::mat4 View = camScaleMatrix * camRotationMatrixX * camTranslationMatrix;
 
         // Model matrix
+        float time = (float)timer.getTicks() / 10;
+
         glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
         glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(time), glm::vec3(0.20f, 0.80f, 0.30f));
         glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
