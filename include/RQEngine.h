@@ -12,6 +12,7 @@
 #include "InputManager.h"
 #include "KeyBinds.h"
 #include "Shader.h"
+#include "Camera3D.h"
 #include "Window.h"
 #include "Game.h"
 

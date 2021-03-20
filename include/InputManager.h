@@ -19,6 +19,7 @@ namespace RQEngine
 
             static bool isKeyPressed(unsigned int keyID);
             static bool isKeyPressedInitial(unsigned int keyID);
+            static bool isKeyReleasedInitial(unsigned int keyID);
             static unsigned int isKeyHeld(unsigned int keyID);
 
             static glm::uvec2 getMousePosition();

@@ -25,11 +25,6 @@ enum KeyCodes {
 
 
 bool gRenderQuad = true;
-glm::vec3 CameraPosition = glm::vec3(0,0,-6);
-glm::vec2 CameraRotation = glm::vec2(0,0);
-glm::vec3 Direction = glm::vec3(0,0, 0);
-
-
 
 GLuint gIBO = 0;
 GLuint gVBO = 0;
@@ -196,12 +191,15 @@ class TestGame: public RQEngine::Game {
         if (inputManager->isKeyPressed(keyBinds->getKey(AIM))) {
             glm::ivec2 mouseMotion = inputManager->getMouseMotion();
 
-            CameraRotation.x -= mouseMotion.x * 0.03f;
-            CameraRotation.y -= mouseMotion.y * 0.03f;
+            camera3D->rotate(-glm::vec2(mouseMotion.x * 0.02f, mouseMotion.y * 0.02f));
+            SDL_SetRelativeMouseMode(SDL_TRUE);
         }
+        if (inputManager->isKeyReleasedInitial(keyBinds->getKey(AIM))) {
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+        }
+
         if(inputManager->isKeyPressed(keyBinds->getKey(RESET))){
-            CameraPosition = glm::vec3(0,0,-6);
-            CameraRotation = glm::vec2(0,0);
+            camera3D->reset();
         }
 
         glm::vec3 movement = glm::vec3(0,0,0);
@@ -223,26 +221,8 @@ class TestGame: public RQEngine::Game {
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
             movement.y += 1;
         }
-        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
-            movement.y += 1;
-        }
 
-        Direction = glm::normalize(
-            glm::vec3(
-                cos(CameraRotation.y) * sin(CameraRotation.x), 
-                sin(CameraRotation.y),
-                cos(CameraRotation.y) * cos(CameraRotation.x)
-	        )
-        );
-        movement = (0.005f * deltaTime) * movement;
-
-        // Need to find the x, y, z components relative to new direction.
-        // Z if moving forward in the direction you are facing, it is the Z component
-        glm::vec3 xComponent = glm::cross(Direction, glm::vec3(0,-1,0)); // Cross Product with Y axis gives a vector perpendicular along the new X axis 
-        glm::vec3 yComponent = glm::cross(Direction, -xComponent); // Cross Product with new X axis gives a vector perpendicular along the new Y axis 
-
-        movement =  Direction * movement.z + xComponent * movement.x + yComponent * movement.y;
-        CameraPosition += movement;
+        camera3D->translateRelative((0.005f * deltaTime) * movement);
 
         if (inputManager->isKeyPressedInitial(SDLK_q)) {
             gRenderQuad = !gRenderQuad;
@@ -262,25 +242,12 @@ void TestGame::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if(gRenderQuad) {
-        // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-        glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) window->getWidth() / (float) window->getHeight(), 0.1f, 100.0f);
-
-        // Or, for an ortho camera :
-        // glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
-
-        // Camera matrix
-        glm::mat4 View = glm::lookAt(
-            CameraPosition, // Camera in World Space
-            CameraPosition + Direction, // Point to look at
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-        );
-
         // Model matrix
         float time = (float)timer.getTicks() / 10;
 
         glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
         glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(time), glm::vec3(0.20f, 0.80f, 0.30f));
-        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
 
         glm::mat4 Model = translationMatrix * rotationMatrix * scaleMatrix;
         //glm::mat4 Model = glm::mat4(1.0f);
@@ -288,8 +255,8 @@ void TestGame::render() {
         shader->use();
 
         glUniformMatrix4fv(gModelID, 1, GL_FALSE, &Model[0][0]);
-        glUniformMatrix4fv(gViewID, 1, GL_FALSE, &View[0][0]);
-        glUniformMatrix4fv(gProjectionID, 1, GL_FALSE, &Projection[0][0]);
+        glUniformMatrix4fv(gViewID, 1, GL_FALSE, &camera3D->getView()[0][0]);
+        glUniformMatrix4fv(gProjectionID, 1, GL_FALSE, &camera3D->getProjection()[0][0]);
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);

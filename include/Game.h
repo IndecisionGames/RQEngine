@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Limiter.h"
 #include "KeyBinds.h"
 #include "InputManager.h"
+#include "Limiter.h"
 #include "Window.h"
+#include "Camera3D.h"
 
 namespace RQEngine
 {
@@ -29,6 +30,7 @@ namespace RQEngine
             KeyBinds* keyBinds;
 
             Window* window;
+            Camera3D* camera3D;
 
         private:
 

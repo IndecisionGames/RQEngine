@@ -1,10 +1,11 @@
 #include <SDL2/SDL.h>
+#include <GL/glew.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
 
 #include "Game.h"
-#include "Shader.h"
+#include "Camera3D.h"
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -30,6 +31,9 @@ void Game::init() {
 
     window = new Window();
     window->init(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    camera3D = new Camera3D();
+    camera3D->init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();

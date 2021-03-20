@@ -39,7 +39,7 @@ void InputManager::handleEvent(SDL_Event& e){
         break;
     case SDL_KEYUP:
         keyMap[e.key.keysym.sym] = false;
-        keyHeldMap[e.key.keysym.sym] = 0;
+        keyHeldMap[e.key.keysym.sym] = -1;
         break;
 
     case SDL_MOUSEBUTTONDOWN:
@@ -47,7 +47,7 @@ void InputManager::handleEvent(SDL_Event& e){
         break;
     case SDL_MOUSEBUTTONUP :
         keyMap[e.button.button] = false;
-        keyHeldMap[e.button.button] = 0;
+        keyHeldMap[e.button.button] = -1;
         break;
 
     case SDL_MOUSEMOTION:
@@ -64,6 +64,8 @@ void InputManager::update(unsigned int deltaTime) {
      for(auto it = keyMap.begin(); it != keyMap.end(); it++){
          if(it->second){
              keyHeldMap[it->first] += deltaTime;
+         } else {
+             keyHeldMap[it->first] = 0;
          }
     }
     mouseMotion = glm::ivec2(0, 0);
@@ -76,6 +78,10 @@ bool InputManager::isKeyPressed(unsigned int keyID) {
 
 bool InputManager::isKeyPressedInitial(unsigned int keyID) {
     return keyMap[keyID] && !keyHeldMap[keyID];
+}
+
+bool InputManager::isKeyReleasedInitial(unsigned int keyID) {
+    return keyHeldMap[keyID] == -1;
 }
 
 unsigned int InputManager::isKeyHeld(unsigned int keyID) {
