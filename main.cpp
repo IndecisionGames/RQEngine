@@ -27,6 +27,9 @@ enum KeyCodes {
 bool gRenderQuad = true;
 glm::vec3 CameraPosition = glm::vec3(0,0,-6);
 glm::vec2 CameraRotation = glm::vec2(0,0);
+glm::vec3 Direction = glm::vec3(0,0, 0);
+
+
 
 GLuint gIBO = 0;
 GLuint gVBO = 0;
@@ -193,36 +196,53 @@ class TestGame: public RQEngine::Game {
         if (inputManager->isKeyPressed(keyBinds->getKey(AIM))) {
             glm::ivec2 mouseMotion = inputManager->getMouseMotion();
 
-            CameraRotation += (glm::vec2)mouseMotion * glm::vec2(0.1f, 0.1f);
+            CameraRotation.x -= mouseMotion.x * 0.03f;
+            CameraRotation.y -= mouseMotion.y * 0.03f;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(RESET))){
-            CameraRotation = glm::vec2(0.1f, 0.1f);
+            CameraPosition = glm::vec3(0,0,-6);
+            CameraRotation = glm::vec2(0,0);
         }
 
-        // Note: Movement is still relative to world, not camera direction
-        float moveVal = 0.005f * deltaTime;
+        glm::vec3 movement = glm::vec3(0,0,0);
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_FORWARD))){
-            CameraPosition.z += moveVal;
+            movement.z += 1;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_BACK))){
-            CameraPosition.z -= moveVal;
+            movement.z -= 1;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_LEFT))){
-            CameraPosition.x += moveVal;
+            movement.x += 1;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_RIGHT))){
-            CameraPosition.x -= moveVal;
+            movement.x -= 1;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_UP))){
-            CameraPosition.y -= moveVal;
+            movement.y -= 1;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
-            CameraPosition.y += moveVal;
+            movement.y += 1;
         }
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
-            CameraPosition.y += moveVal;
+            movement.y += 1;
         }
 
+        Direction = glm::normalize(
+            glm::vec3(
+                cos(CameraRotation.y) * sin(CameraRotation.x), 
+                sin(CameraRotation.y),
+                cos(CameraRotation.y) * cos(CameraRotation.x)
+	        )
+        );
+        movement = (0.005f * deltaTime) * movement;
+
+        // Need to find the x, y, z components relative to new direction.
+        // Z if moving forward in the direction you are facing, it is the Z component
+        glm::vec3 xComponent = glm::cross(Direction, glm::vec3(0,-1,0)); // Cross Product with Y axis gives a vector perpendicular along the new X axis 
+        glm::vec3 yComponent = glm::cross(Direction, -xComponent); // Cross Product with new X axis gives a vector perpendicular along the new Y axis 
+
+        movement =  Direction * movement.z + xComponent * movement.x + yComponent * movement.y;
+        CameraPosition += movement;
 
         if (inputManager->isKeyPressedInitial(SDLK_q)) {
             gRenderQuad = !gRenderQuad;
@@ -249,11 +269,11 @@ void TestGame::render() {
         // glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
 
         // Camera matrix
-        glm::mat4 camScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-        glm::mat4 camRotationMatrixX = glm::rotate(glm::mat4(1.0f), glm::radians(CameraRotation.x), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 camTranslationMatrix = glm::translate(glm::mat4(1.0f), CameraPosition);
-
-        glm::mat4 View = camScaleMatrix * camRotationMatrixX * camTranslationMatrix;
+        glm::mat4 View = glm::lookAt(
+            CameraPosition, // Camera in World Space
+            CameraPosition + Direction, // Point to look at
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+        );
 
         // Model matrix
         float time = (float)timer.getTicks() / 10;
