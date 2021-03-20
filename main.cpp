@@ -16,6 +16,7 @@ enum KeyCodes {
     PLAYER_RIGHT,
     PLAYER_UP,
     PLAYER_DOWN,
+    PLAYER_SPRINT,
 
     FIRE = 50,
     AIM,
@@ -23,6 +24,9 @@ enum KeyCodes {
     RESET = 100,
 };
 
+
+float MOUSE_SENSTIVITY = 0.8f; 
+float MOVE_SPEED = 0.005f; 
 
 bool gRenderQuad = true;
 
@@ -163,13 +167,14 @@ class TestGame: public RQEngine::Game {
 
     void onInit() {
 
-        RQEngine::keyBind keys[9] = {
+        RQEngine::keyBind keys[10] = {
             RQEngine::keyBind(PLAYER_FORWARD, SDLK_w),
             RQEngine::keyBind(PLAYER_BACK, SDLK_s),
             RQEngine::keyBind(PLAYER_LEFT, SDLK_a),
             RQEngine::keyBind(PLAYER_RIGHT, SDLK_d),
-            RQEngine::keyBind(PLAYER_UP, SDLK_LSHIFT),
+            RQEngine::keyBind(PLAYER_UP, SDLK_SPACE),
             RQEngine::keyBind(PLAYER_DOWN, SDLK_LCTRL),
+            RQEngine::keyBind(PLAYER_SPRINT, SDLK_LSHIFT),
             RQEngine::keyBind(RESET, SDLK_r),
             RQEngine::keyBind(FIRE, SDL_BUTTON_LEFT),
             RQEngine::keyBind(AIM, SDL_BUTTON_RIGHT)
@@ -178,25 +183,19 @@ class TestGame: public RQEngine::Game {
 
         timer.start();
         initGL();
+        SDL_SetRelativeMouseMode(SDL_TRUE);
     };
 
     void onExit() {
+        SDL_SetRelativeMouseMode(SDL_FALSE);
         shader->free();
     };
 
     void fixedUpdate(float deltaTime) {};
 
     void update(float deltaTime) {
-
-        if (inputManager->isKeyPressed(keyBinds->getKey(AIM))) {
-            glm::ivec2 mouseMotion = inputManager->getMouseMotion();
-
-            camera3D->rotate(-glm::vec2(mouseMotion.x * 0.02f, mouseMotion.y * 0.02f));
-            SDL_SetRelativeMouseMode(SDL_TRUE);
-        }
-        if (inputManager->isKeyReleasedInitial(keyBinds->getKey(AIM))) {
-            SDL_SetRelativeMouseMode(SDL_FALSE);
-        }
+        glm::ivec2 mouseMotion = inputManager->getMouseMotion();
+        camera3D->rotate(MOUSE_SENSTIVITY * glm::vec2(mouseMotion.x, -mouseMotion.y));
 
         if(inputManager->isKeyPressed(keyBinds->getKey(RESET))){
             camera3D->reset();
@@ -222,10 +221,24 @@ class TestGame: public RQEngine::Game {
             movement.y += 1;
         }
 
-        camera3D->translateRelative((0.005f * deltaTime) * movement);
 
-        if (inputManager->isKeyPressedInitial(SDLK_q)) {
+        if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_SPRINT))){
+            movement *= 2;
+        }
+
+
+        camera3D->translateRelative((MOVE_SPEED * deltaTime) * movement);
+
+        if (inputManager->isKeyPressedInitial(SDLK_1)) {
             gRenderQuad = !gRenderQuad;
+        }
+
+        if (inputManager->isKeyPressedInitial(SDLK_2)) {
+            if(timer.isPaused()){
+                timer.unpause();
+            } else {
+                timer.pause();
+            }
         }
 
     };

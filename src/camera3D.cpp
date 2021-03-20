@@ -34,14 +34,24 @@ void Camera3D::setRotation(glm::vec2 rotationVal){
 void Camera3D::reset(){
     position = defaultPosition;
     rotation = defaultRotation;
+    updateDirection();
 }
 
 void Camera3D::updateDirection(){
+    // prevent screen flip
+    if (rotation.y > 89.9f){
+        rotation.y = 89.9f;
+    }
+    if (rotation.y < -89.9f){
+        rotation.y = -89.9f;
+    }
+
+
     direction = glm::normalize(
             glm::vec3(
-                cos(rotation.y) * sin(rotation.x),
-                sin(rotation.y),
-                cos(rotation.y) * cos(rotation.x)
+                glm::cos(glm::radians(rotation.y)) * glm::cos(glm::radians(rotation.x)),
+                glm::sin(glm::radians(rotation.y)),
+                glm::cos(glm::radians(rotation.y)) * glm::sin(glm::radians(rotation.x))
 	        )
         );
 }

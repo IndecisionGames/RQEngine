@@ -41,6 +41,7 @@ void Game::init() {
 
     // VSync
     SDL_GL_SetSwapInterval(1);
+    // fpsLimiter.setFPSTarget(144);
 
     // Custom Init
     onInit();

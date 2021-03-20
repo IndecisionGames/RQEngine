@@ -10,7 +10,7 @@ namespace RQEngine
         public:
             Camera3D();
 
-            void init(int screenWidth, int screenHeight, float fov = 45.0f, float near = 0.1f, float far = 100.0f, glm::vec3 defaultPositionVal = glm::vec3(0,0,0), glm::vec2 defaultRotationVal = glm::vec2(0,0));
+            void init(int screenWidth, int screenHeight, float fov = 45.0f, float near = 0.1f, float far = 100.0f, glm::vec3 defaultPositionVal = glm::vec3(0,0,0), glm::vec2 defaultRotationVal = glm::vec2(90,0));
 
             void setPosition(glm::vec3 pos);
             void setRotation(glm::vec2 rot);
