@@ -1,5 +1,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <stdio.h>
 
 #include "Camera3D.h"
 
@@ -10,9 +11,12 @@ Camera3D::Camera3D() {}
 
 
 void Camera3D::init(int screenWidth, int screenHeight, float fov, float near, float far, glm::vec3 defaultPositionVal, glm::vec2 defaultRotationVal){
-    projection = glm::perspective(glm::radians(fov), (float)screenWidth / (float)screenHeight, near, far);
-    // Or, for an ortho camera :
-    // glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+    mFov = fov;
+    mMaxFov = fov;
+    mAspect = float(screenWidth) / float(screenHeight);
+    mFar = far;
+    mNear = near;
+    updatePerspective();
 
     defaultPosition = defaultPositionVal;
     defaultRotation = defaultRotationVal;
@@ -37,15 +41,19 @@ void Camera3D::reset(){
     updateDirection();
 }
 
+void Camera3D::updatePerspective(){
+    projection = glm::perspective(glm::radians(mFov), mAspect, mNear, mFar);
+    // TODO: implement orthogonal perspective
+    // glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+}
+
 void Camera3D::updateDirection(){
     // prevent screen flip
-    if (rotation.y > 89.9f){
-        rotation.y = 89.9f;
-    }
-    if (rotation.y < -89.9f){
-        rotation.y = -89.9f;
-    }
-
+    if (rotation.y > 89.9f) rotation.y = 89.9f;
+    if (rotation.y < -89.9f) rotation.y = -89.9f;
+    // keep yaw between -180 and 180 degrees
+    if (rotation.x < -180.0f) rotation.x = 180.0f;
+    if (rotation.x > 180.0f) rotation.x = -180.0f;
 
     direction = glm::normalize(
             glm::vec3(
@@ -54,6 +62,13 @@ void Camera3D::updateDirection(){
                 glm::cos(glm::radians(rotation.y)) * glm::sin(glm::radians(rotation.x))
 	        )
         );
+}
+
+void Camera3D::zoom(float offset){
+    mFov -= offset;
+    if(mFov < 1.0f) mFov = 1.0f;
+    if(mFov > mMaxFov) mFov = mMaxFov;
+    updatePerspective();
 }
 
 

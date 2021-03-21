@@ -19,6 +19,7 @@ namespace RQEngine
             void translate(glm::vec3 translate);
             void translateRelative(glm::vec3 translate);
             void rotate(glm::vec2 rotationVal);
+            void zoom(float offset);
 
             glm::mat4 getProjection();
             glm::mat4 getView();
@@ -32,12 +33,17 @@ namespace RQEngine
 
             glm::vec3 position;
             glm::vec3 direction;
-            glm::vec2 rotation;
+            glm::vec2 rotation; // Pitch and Yaw
 
             glm::vec3 defaultPosition;
             glm::vec2 defaultRotation;
 
             void updateDirection();
+            void updatePerspective();
+
+            float mFov, mMaxFov;
+            float mAspect;
+            float mNear, mFar;
     };
 
 } // namespace RQEngine

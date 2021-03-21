@@ -9,7 +9,6 @@
 #include "Main.h"
 
 enum KeyCodes {
-
     PLAYER_FORWARD = 100,
     PLAYER_BACK,
     PLAYER_LEFT,
@@ -21,7 +20,6 @@ enum KeyCodes {
     AIM,
     RESET,
 };
-
 
 float MOUSE_SENSTIVITY = 0.8f; 
 float MOVE_SPEED = 0.005f; 
@@ -163,6 +161,8 @@ class TestGame: public RQEngine::Game {
             camera3D->rotate(MOUSE_SENSTIVITY * glm::vec2(mouseMotion.x, -mouseMotion.y));
         }
 
+        glm::ivec2 mouseWheelMotion = inputManager->getMouseWheelMotion();
+        camera3D->zoom(mouseWheelMotion.y * 1.5);
 
         camera3D->translateRelative((MOVE_SPEED * deltaTime) * movement);
 

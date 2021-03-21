@@ -55,7 +55,7 @@ void InputManager::handleEvent(SDL_Event& e){
         mouseMotion = glm::ivec2(e.motion.xrel, e.motion.yrel);
         break;
     case SDL_MOUSEWHEEL:
-        mouseWheelMotion = glm::uvec2(e.wheel.x, e.wheel.y);
+        mouseWheelMotion = glm::ivec2(e.wheel.x, e.wheel.y);
         break;
     }
 }
