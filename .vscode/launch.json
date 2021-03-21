@@ -8,7 +8,7 @@
             "name": "(gdb) Launch Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/debug/main.exe",
+            "program": "${workspaceFolder}/bin/debug/TestGame.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

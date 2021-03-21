@@ -51,7 +51,7 @@ Timer timer = Timer();
 
 void initShaders() {
     // Compline Shaders
-    shader = new RQEngine::Shader("src/shaders/SimpleVertexShader.glsl", "src/shaders/SimpleFragmentShader.glsl");
+    shader = new RQEngine::Shader("game/src/shaders/SimpleVertexShader.glsl", "game/src/shaders/SimpleFragmentShader.glsl");
     gModelID = glGetUniformLocation(*(shader->getID()), "Model");
     gViewID = glGetUniformLocation(*(shader->getID()), "View");
     gProjectionID = glGetUniformLocation(*(shader->getID()), "Projection");
@@ -118,19 +118,16 @@ class TestGame: public RQEngine::Game {
 
         timer.start();
         initGL();
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+        SDL_SetRelativeMouseMode(SDL_FALSE);
     };
 
     void onExit() {
-        SDL_SetRelativeMouseMode(SDL_FALSE);
         shader->free();
     };
 
     void fixedUpdate(float deltaTime) {};
 
     void update(float deltaTime) {
-        glm::ivec2 mouseMotion = inputManager->getMouseMotion();
-        camera3D->rotate(MOUSE_SENSTIVITY * glm::vec2(mouseMotion.x, -mouseMotion.y));
 
         if(inputManager->isKeyPressed(keyBinds->getKey(RESET))){
             camera3D->reset();
@@ -155,10 +152,23 @@ class TestGame: public RQEngine::Game {
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_DOWN))){
             movement.y += 1;
         }
-
-
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_SPRINT))){
             movement *= 2;
+        }
+        if(inputManager->isKeyPressed(keyBinds->getKey(AIM))){
+            printf("Pressed\n");
+            if(SDL_GetRelativeMouseMode() == SDL_TRUE) {
+                printf("Turning off\n");
+                SDL_SetRelativeMouseMode(SDL_FALSE);
+            } else {
+                printf("Turning on\n");
+                SDL_SetRelativeMouseMode(SDL_TRUE);
+            }
+        }
+
+        if(SDL_GetRelativeMouseMode() == SDL_TRUE) {
+            glm::ivec2 mouseMotion = inputManager->getMouseMotion();
+            camera3D->rotate(MOUSE_SENSTIVITY * glm::vec2(mouseMotion.x, -mouseMotion.y));
         }
 
 
