@@ -14,12 +14,12 @@ KeyBinds* KeyBinds::getInstance() {
     return instance;
 }
 
-void KeyBinds::load(unsigned int name, unsigned int key){
-    keyBindingMap[name] = key;
+void KeyBinds::load(unsigned int customKeyID, unsigned int key){
+    keyBindingMap[customKeyID] = key;
 }
 
-void KeyBinds::update(unsigned int name, unsigned int key) {
-    KeyBinds::load(name, key);
+void KeyBinds::update(unsigned int customKeyID, unsigned int key) {
+    KeyBinds::load(customKeyID, key);
 }
 
 unsigned int KeyBinds::getKey(unsigned int customKeyID) {

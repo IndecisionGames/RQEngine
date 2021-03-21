@@ -12,8 +12,8 @@ namespace RQEngine
 
             static KeyBinds* getInstance();
             
-            static void load(unsigned int name, unsigned int key);
-            static void update(unsigned int name, unsigned int key);
+            static void load(unsigned int customKeyID, unsigned int key);
+            static void update(unsigned int customKeyID, unsigned int key);
 
             static unsigned int getKey(unsigned int customKeyID);
 
