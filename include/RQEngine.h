@@ -15,5 +15,6 @@
 #include "Camera3D.h"
 #include "Window.h"
 #include "Game.h"
+#include "common/ObjLoader.h"
 
 #endif /* RQEngine_h_ */
