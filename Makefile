@@ -37,7 +37,7 @@ Build:
 	yes|cp -ruv $(L_DIR)/* $(B_DIR)/.
 	yes|cp -ruv $(R_DIR)/* $(B_DIR)/$(R_DIR)/.
 	yes|cp -ruv $(R_DIR_EXTRA)/* $(B_DIR)/$(R_DIR)/.
-	if $(CC) $(S_FILES) $(COMPILER_FLAGS) $(INCLUDE_FLAGS) $(LIBRARY_FLAGS) $(LINKER_FLAGS) -o $(EXEC); then echo -e "\nBUILD SUCCEEDED\n"; else echo -e "\nBUILD FAILED\n"; fi
+	if $(CC) $(S_FILES) $(COMPILER_FLAGS) $(INCLUDE_FLAGS) $(LIBRARY_FLAGS) $(LINKER_FLAGS) -o $(EXEC); then echo -e "\nBUILD SUCCEEDED\n"; else echo -e "\nBUILD FAILED\n" && false; fi
 
 
 run:Build
@@ -47,7 +47,7 @@ osx-build:
 	mkdir -p $(B_DIR)/$(R_DIR)
 	rsync -auv $(R_DIR)/ $(B_DIR)/$(R_DIR)/
 	rsync -auv $(R_DIR_EXTRA)/ $(B_DIR)/$(R_DIR)/
-	if $(CC) $(S_FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(EXEC); then echo "\nBUILD SUCCEEDED\n"; else echo "\nBUILD FAILED\n"; fi 
+	if $(CC) $(S_FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(EXEC); then echo "\nBUILD SUCCEEDED\n"; else echo "\nBUILD FAILED\n" && false; fi 
 
 osx:osx-build
 	$(EXEC)

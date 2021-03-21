@@ -19,4 +19,3 @@ jobs:
       run: brew install sdl2 sdl2_image sdl2_ttf glew glm
     - name: make
       run: make osx-build
-
