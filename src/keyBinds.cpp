@@ -1,5 +1,4 @@
 #include "KeyBinds.h"
-#include <stdarg.h>
 
 using namespace RQEngine;
 
@@ -15,14 +14,12 @@ KeyBinds* KeyBinds::getInstance() {
     return instance;
 }
 
-void KeyBinds::loadKeyBinds(keyBind *keyBindings){
-     for(int i = 0; i <= sizeof(keyBindings); i++){
-        keyBindingMap[keyBindings[i].first] = keyBindings[i].second;
-    }
+void KeyBinds::load(unsigned int name, unsigned int key){
+    keyBindingMap[name] = key;
 }
 
-void KeyBinds::updateKeyBind(keyBind keyBinding) {
-    keyBindingMap[keyBinding.first] = keyBinding.second;
+void KeyBinds::update(unsigned int name, unsigned int key) {
+    KeyBinds::load(name, key);
 }
 
 unsigned int KeyBinds::getKey(unsigned int customKeyID) {

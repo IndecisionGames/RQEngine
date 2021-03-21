@@ -6,17 +6,14 @@
 namespace RQEngine
 {
 
-    typedef std::pair<unsigned int, unsigned int> keyBind;
-
     class KeyBinds {
 
         public:
 
             static KeyBinds* getInstance();
-
-            //TODO: Use variadic function
-            static void loadKeyBinds(keyBind *keyBindings);
-            static void updateKeyBind(keyBind keyBinding);
+            
+            static void load(unsigned int name, unsigned int key);
+            static void update(unsigned int name, unsigned int key);
 
             static unsigned int getKey(unsigned int customKeyID);
 

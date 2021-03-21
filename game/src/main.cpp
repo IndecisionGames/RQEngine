@@ -10,18 +10,16 @@
 
 enum KeyCodes {
 
-    PLAYER_FORWARD = 10,
+    PLAYER_FORWARD = 100,
     PLAYER_BACK,
     PLAYER_LEFT,
     PLAYER_RIGHT,
     PLAYER_UP,
     PLAYER_DOWN,
     PLAYER_SPRINT,
-
-    FIRE = 50,
+    FIRE,
     AIM,
-
-    RESET = 100,
+    RESET,
 };
 
 
@@ -102,19 +100,16 @@ class TestGame: public RQEngine::Game {
 
     void onInit() {
 
-        RQEngine::keyBind keys[10] = {
-            RQEngine::keyBind(PLAYER_FORWARD, SDLK_w),
-            RQEngine::keyBind(PLAYER_BACK, SDLK_s),
-            RQEngine::keyBind(PLAYER_LEFT, SDLK_a),
-            RQEngine::keyBind(PLAYER_RIGHT, SDLK_d),
-            RQEngine::keyBind(PLAYER_UP, SDLK_SPACE),
-            RQEngine::keyBind(PLAYER_DOWN, SDLK_LCTRL),
-            RQEngine::keyBind(PLAYER_SPRINT, SDLK_LSHIFT),
-            RQEngine::keyBind(RESET, SDLK_r),
-            RQEngine::keyBind(FIRE, SDL_BUTTON_LEFT),
-            RQEngine::keyBind(AIM, SDL_BUTTON_RIGHT)
-        };
-        keyBinds->loadKeyBinds(keys);
+        keyBinds->load(PLAYER_FORWARD, SDLK_w);
+        keyBinds->load(PLAYER_BACK, SDLK_s);
+        keyBinds->load(PLAYER_LEFT, SDLK_a);
+        keyBinds->load(PLAYER_RIGHT, SDLK_d);
+        keyBinds->load(PLAYER_UP, SDLK_SPACE);
+        keyBinds->load(PLAYER_DOWN, SDLK_LCTRL);
+        keyBinds->load(PLAYER_SPRINT, SDLK_LSHIFT);
+        keyBinds->load(RESET, SDLK_r);
+        keyBinds->load(FIRE, SDL_BUTTON_LEFT);
+        keyBinds->load(AIM, SDL_BUTTON_RIGHT);
 
         timer.start();
         initGL();
@@ -155,13 +150,10 @@ class TestGame: public RQEngine::Game {
         if(inputManager->isKeyPressed(keyBinds->getKey(PLAYER_SPRINT))){
             movement *= 2;
         }
-        if(inputManager->isKeyPressed(keyBinds->getKey(AIM))){
-            printf("Pressed\n");
+        if(inputManager->isKeyPressedInitial(keyBinds->getKey(AIM))){
             if(SDL_GetRelativeMouseMode() == SDL_TRUE) {
-                printf("Turning off\n");
                 SDL_SetRelativeMouseMode(SDL_FALSE);
             } else {
-                printf("Turning on\n");
                 SDL_SetRelativeMouseMode(SDL_TRUE);
             }
         }
