@@ -79,16 +79,6 @@ void initGL() {
     // Object 2
     // TODO
 
-
-    // Read .obj
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec2> uvs; // Not used atm
-    std::vector<glm::vec3> normals; // Not used atm
-    // loadObj("res/mesh/icosphere.obj", vertices, uvs, normals); // BUG - crashes at runtime
-
-    // glGenBuffers(1, &gObjVB);
-    // glBindBuffer(GL_ARRAY_BUFFER, gObjVB);
-    // glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 }
 
 
