@@ -6,7 +6,7 @@
 #ifndef RQEngine_h_
 #define RQEngine_h_
 
-#include "common/Colour.h"
+#include "Colour.h"
 #include "Texture.h"
 #include "Timer.h"
 #include "Limiter.h"

@@ -1,5 +1,5 @@
 # Directories
-S_DIR =src src/common game/src
+S_DIR =src src/input src/rendering src/rendering/display src/resource src/utility game/src
 I_DIR=include game/include
 R_DIR=res
 R_DIR_EXTRA=game/res
