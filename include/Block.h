@@ -10,6 +10,7 @@ namespace RQEngine {
             void setActive(bool active){m_active = active;};
             int getType(){return m_type;};
             void setType(int type){m_type = type;};
+            int BLOCK_RENDER_SIZE = 1;
         
         private:
             bool m_active;

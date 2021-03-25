@@ -57,8 +57,8 @@ GLfloat vertexData[] = {
 // One color for each vertex.
 GLfloat colourData[] = {
     RED.x, RED.y, RED.z,
-    RED.x, RED.y, RED.z,
-    RED.x, RED.y, RED.z,
+    GREEN.x, GREEN.y, GREEN.z,
+    BLUE.x, BLUE.y, BLUE.z,
 
     GREEN.x, GREEN.y, GREEN.z,
     GREEN.x, GREEN.y, GREEN.z,
@@ -73,8 +73,8 @@ GLfloat colourData[] = {
     GREEN.x, GREEN.y, GREEN.z,
 
     RED.x, RED.y, RED.z,
-    RED.x, RED.y, RED.z,
-    RED.x, RED.y, RED.z,
+    BLUE.x, BLUE.y, BLUE.z,
+    GREEN.x, GREEN.y, GREEN.z,
 
     BLUE.x, BLUE.y, BLUE.z,
     BLUE.x, BLUE.y, BLUE.z,

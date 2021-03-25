@@ -41,16 +41,22 @@ GLuint gModelID = 0;
 GLuint gViewID = 0;
 GLuint gProjectionID = 0;
 
-RQEngine::Shader* shader;
+RQEngine::Shader shader;
 
 Timer timer = Timer();
 
 void initShaders() {
     // Compline Shaders
-    shader = new RQEngine::Shader("game/src/shaders/SimpleVertexShader.glsl", "game/src/shaders/SimpleFragmentShader.glsl");
-    gModelID = glGetUniformLocation(*(shader->getID()), "Model");
-    gViewID = glGetUniformLocation(*(shader->getID()), "View");
-    gProjectionID = glGetUniformLocation(*(shader->getID()), "Projection");
+    shader = RQEngine::Shader();
+    std::vector<GLuint> shaders;
+    shaders.push_back(RQEngine::Shader::CreateShader("game/src/shaders/SimpleVertexShader.glsl", GL_VERTEX_SHADER));
+    shaders.push_back(RQEngine::Shader::CreateShader("game/src/shaders/SimpleFragmentShader.glsl", GL_FRAGMENT_SHADER));
+
+    shader.initProgram(shaders);
+
+    gModelID = glGetUniformLocation(*(shader.getID()), "Model");
+    gViewID = glGetUniformLocation(*(shader.getID()), "View");
+    gProjectionID = glGetUniformLocation(*(shader.getID()), "Projection");
 }
 
 void initVertexBuffer(GLuint* object) {
@@ -79,6 +85,7 @@ void initGL() {
     // Object 2
     // TODO
 
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -87,7 +94,6 @@ class TestGame: public RQEngine::Game {
     void render();
 
     void onInit() {
-
         keyBinds->load(PLAYER_FORWARD, SDLK_w);
         keyBinds->load(PLAYER_BACK, SDLK_s);
         keyBinds->load(PLAYER_LEFT, SDLK_a);
@@ -105,13 +111,12 @@ class TestGame: public RQEngine::Game {
     };
 
     void onExit() {
-        shader->free();
+        shader.free();
     };
 
     void fixedUpdate(float deltaTime) {};
 
     void update(float deltaTime) {
-
         if(inputManager->isKeyPressed(keyBinds->getKey(RESET))){
             camera3D->reset();
         }
@@ -192,7 +197,7 @@ void TestGame::render() {
         glm::mat4 Model = translationMatrix * rotationMatrix * scaleMatrix;
         //glm::mat4 Model = glm::mat4(1.0f);
 
-        shader->use();
+        shader.use();
 
         glUniformMatrix4fv(gModelID, 1, GL_FALSE, &Model[0][0]);
         glUniformMatrix4fv(gViewID, 1, GL_FALSE, &camera3D->getView()[0][0]);

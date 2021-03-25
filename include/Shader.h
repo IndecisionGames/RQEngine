@@ -10,6 +10,7 @@
 #endif
 #include <SDL2/SDL_opengl.h>
 #include <string>
+#include <vector>
 
 namespace RQEngine
 {
@@ -17,15 +18,16 @@ namespace RQEngine
     class Shader {
 
         public:
-            Shader(const char* vertexPath, const char* fragmentPath);
+            Shader();
 
+            static GLuint CreateShader(const std::string &shaderPath, GLenum shaderType);
+            void initProgram(const std::vector<GLuint> &shaderList);
             GLuint* getID();
             void use();
-
             void free();
 
         private:
-            GLuint ProgramID;
+            GLuint program;
     };
 
 } // namespace RQEngine

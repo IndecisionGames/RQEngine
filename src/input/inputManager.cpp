@@ -6,7 +6,7 @@ using namespace RQEngine;
 
 InputManager* InputManager::instance = 0;
 std::unordered_map<unsigned int, bool> InputManager::keyMap;
-std::unordered_map<unsigned int, unsigned int> InputManager::keyHeldMap;
+std::unordered_map<unsigned int, int> InputManager::keyHeldMap;
 glm::uvec2 InputManager::mousePosition;
 glm::ivec2 InputManager::mouseMotion;
 glm::ivec2 InputManager::mouseWheelMotion;

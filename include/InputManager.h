@@ -33,7 +33,7 @@ namespace RQEngine
             static InputManager* instance;
 
             static std::unordered_map<unsigned int, bool> keyMap;
-            static std::unordered_map<unsigned int, unsigned int> keyHeldMap;
+            static std::unordered_map<unsigned int, int> keyHeldMap;
 
             static glm::uvec2 mousePosition;
             static glm::ivec2 mouseMotion;
