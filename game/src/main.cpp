@@ -49,8 +49,8 @@ void initShaders() {
     // Compline Shaders
     shader = RQEngine::Shader();
     std::vector<GLuint> shaders;
-    shaders.push_back(RQEngine::Shader::CreateShader("game/src/shaders/SimpleVertexShader.glsl", GL_VERTEX_SHADER));
-    shaders.push_back(RQEngine::Shader::CreateShader("game/src/shaders/SimpleFragmentShader.glsl", GL_FRAGMENT_SHADER));
+    shaders.push_back(RQEngine::Shader::CreateShader("game/src/shaders/default.vert", GL_VERTEX_SHADER));
+    shaders.push_back(RQEngine::Shader::CreateShader("game/src/shaders/default.frag", GL_FRAGMENT_SHADER));
 
     shader.initProgram(shaders);
 
@@ -67,9 +67,9 @@ void initVertexBuffer(GLuint* object) {
 //Initializes rendering program and clear color
 void initGL() {
     
+    initShaders();
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    initShaders();
     
     // Object 1
     glGenVertexArrays(1, &vao1);
